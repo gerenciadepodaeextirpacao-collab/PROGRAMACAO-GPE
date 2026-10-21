@@ -334,6 +334,56 @@ nav.tabs button[aria-current="page"]{background:linear-gradient(180deg,#ff8c42 0
 /* botão de salvar sempre visível, flutuando acima das abas */
 .floatbar{position:sticky;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:4;padding:8px;margin-inline:-8px;border-radius:18px;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+/* evolução e resumo mês a mês */
+.evot{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px}
+.evot button{min-height:36px;padding:0 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:700 13px var(--display);letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.evot button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.evot button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.mtab{overflow-x:auto;margin-top:4px}
+.mtab table{width:100%;border-collapse:collapse;font-size:13px;min-width:720px;font-variant-numeric:tabular-nums}
+.mtab th{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.mtab td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line);color:var(--ink);white-space:nowrap}
+.mtab th:first-child,.mtab td:first-child{text-align:left;position:sticky;left:0;background:var(--surface)}
+.mtab tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
+.mtab .pc{display:inline-block;min-width:44px;padding:1px 6px;border-radius:99px;font-weight:700;font-size:12px;text-align:center}
+.mtab .pc.ok{background:var(--ok-bg);color:var(--ok)}.mtab .pc.wr{background:var(--warn-bg);color:var(--warn)}.mtab .pc.bd{background:var(--bad-bg);color:var(--bad)}
+.mtab tr.atual td{background:var(--sunk)}
+/* acompanhamento da programação (grade turma × dia) */
+.agrid{overflow-x:auto;margin:6px -4px 0;padding:0 4px 4px}
+.agrid table{border-collapse:separate;border-spacing:3px;width:100%;min-width:560px;table-layout:fixed}
+.agrid th{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center;padding:2px 0 4px}
+.agrid th small{display:block;font-weight:500;letter-spacing:0;text-transform:none}
+.agrid th.hj{color:var(--accent)}
+.agrid th.tm{width:104px;text-align:left}
+.agrid th.tm,.agrid td.tm{position:sticky;left:0;z-index:1;background:var(--surface)}
+.agrid td.tm{font-size:12px;font-weight:600;color:var(--ink);line-height:1.2;white-space:normal;overflow-wrap:anywhere;padding-right:4px}
+.agrid td.tm small{display:block;font-weight:400;color:var(--muted)}
+.acell{width:100%;min-height:52px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:5px 4px;display:grid;gap:4px;align-content:start;justify-items:center;cursor:pointer;font:inherit;color:var(--ink)}
+.acell:hover{border-color:var(--muted)}
+.acell:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.acell[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.acell.vazio{background:transparent;border-style:dashed;cursor:default;color:var(--muted)}
+.acell.alerta{background:var(--bad-bg)}
+.acell b{font:700 15px/1 var(--display)}
+.adots{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:100%}
+.adots i{width:9px;height:9px;border-radius:50%;display:block}
+.alg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--muted);margin:2px 0 4px}
+.alg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:0}
+.adet{margin-top:10px;border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}
+.adet .it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:7px 9px;border-radius:8px;background:var(--sunk);cursor:pointer;border:0;text-align:left;font:inherit;color:var(--ink);width:100%}
+.adet .it .lc{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adet .it .mt{grid-column:1/-1;font-size:12px;color:var(--muted)}
+.feed{display:grid;gap:0}
+.feed .ev{display:grid;grid-template-columns:52px minmax(0,1fr);gap:2px 10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.feed .ev:last-child{border-bottom:0}
+.feed .ev time{color:var(--muted);font-variant-numeric:tabular-nums;font-size:12px;line-height:1.25}
+.feed .ev .ac{color:var(--ink)}
+.feed .ev .ac b{font-weight:700}
+.feed .ev .lo{grid-column:2;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* filtro por dia (Painel / relatório) */
+.diaf{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+.diaf label{font-weight:600;color:var(--ink);font-size:14px}
+.diaf .btn{min-height:44px;padding:0 12px;font-size:13px}
 /* impacto da queda na programação */
 .impbox{border-top:1px dashed var(--line);margin-top:12px}
 .improw{display:grid;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
@@ -528,7 +578,7 @@ nav.tabs button[aria-current="page"]{background:linear-gradient(180deg,#ff8c42 0
     <div class="step">Equipe <b>quem vai executar</b></div>
     <div class="row2">
       <label class="f">Equipe<select id="equipe"><option>1ª EQUIPE</option><option>2ª EQUIPE</option><option>3ª EQUIPE</option></select></label>
-      <label class="f">Viatura<select id="viatura"><option>SPLINTER 5063.6</option><option>SPLINTER 5064.6</option><option>SPLINTER 5065.6</option><option>SPLINTER 5066.6</option><option value="SPLINTER 5071.0">SPLINTER 5071.0 (reserva)</option><option>SKY 5074.0</option></select></label>
+      <label class="f">Viatura<select id="viatura"><option>SPLINTER 5063.6</option><option>SPLINTER 5064.6</option><option>SPLINTER 5065.6</option><option>SPLINTER 5066.6</option><option value="SPLINTER 5071.0">SPLINTER 5071.0 (reserva)</option><option>SKY 5074.0</option><option>VAN 4051.5</option></select></label>
     </div>
   </section>
 
@@ -668,7 +718,9 @@ nav.tabs button[aria-current="page"]{background:linear-gradient(180deg,#ff8c42 0
 <div id="v-resumo" hidden>
   <h2>Painel</h2>
   <p class="lead">Programado × executado em tempo real, direto dos lançamentos. Use os filtros para ver uma semana, um grupo ou uma turma.</p>
-  <div class="filters"><select id="rSem" aria-label="Semana"></select><select id="rGrp" aria-label="Grupo"><option value="">PODA I + PODA II</option><option>PODA I</option><option>PODA II</option></select><select id="rSup" aria-label="Turma" style="grid-column:1/-1"></select></div>
+  <div class="filters"><select id="rSem" aria-label="Semana"></select><select id="rGrp" aria-label="Grupo"><option value="">PODA I + PODA II</option><option>PODA I</option><option>PODA II</option></select><select id="rSup" aria-label="Turma" style="grid-column:1/-1"></select>
+    <div class="diaf" style="grid-column:1/-1"><label for="rDia">Dia específico</label><input type="date" id="rDia" aria-label="Dia específico"><button type="button" class="btn sec" id="rDiaX" hidden>Limpar dia</button></div></div>
+  <p class="note" id="rDiaNote" hidden style="margin:6px 0 0"></p>
   <div class="actions" style="grid-template-columns:1fr;margin-top:10px">
     <button type="button" class="btn pri" id="rptBtn">Relatório com gráficos</button>
   </div>
@@ -688,7 +740,7 @@ nav.tabs button[aria-current="page"]{background:linear-gradient(180deg,#ff8c42 0
   </div>
   <p class="note" id="csvNote">A planilha Excel sai formatada, com as abas <b>Resumo</b> (indicadores, quadro por turma e contrato mensal), <b>Serviços</b> (com filtros e totais), <b>Remarcações</b> e <b>Galho e árvore caída</b>. Usa os mesmos filtros de semana, grupo e turma acima.</p>
 </div>
-<p class="cred" style="margin:28px 0 8px">Programação GPE · desenvolvido por Victor Ricardo Porto Alcântara</p>
+
 </main>
 
 <nav class="tabs"><div class="wrap">
@@ -1574,7 +1626,7 @@ function avisoContrato(id, body){
 function renderResumo(){
   const all=todos(); fillSemanas($("#rSem"),all,true);
   const sem=$("#rSem").value, grp=$("#rGrp").value, rsup=$("#rSup").value;
-  const rows=all.filter(r=>(!sem||r.semana==sem)&&(!grp||r.grupo===grp)&&(!rsup||r.supervisao===rsup));
+  const rows=all.filter(filtroR(rptFiltro()));
   const prog=rows.filter(r=>!r.avulso);
   const c={prog:prog.length, SIM:0, PARCIAL:0, NAO:0, late:0, fut:0, avulso:rows.filter(r=>r.avulso).length, rem:rows.filter(r=>r.remarcadaDe).length};
   let Pp=0,Pe=0,Rp=0,Ep=0,Ee=0,Re=0; const it={}, mot={}, bySup={};
@@ -1615,12 +1667,19 @@ function renderResumo(){
   try{renderPainel()}catch(e){console.error(e)}
 }
 $("#rSup").innerHTML=`<option value="">Todas as turmas</option>`+SUPS.map(s=>`<option value="${esc(s.id)}">${esc(s.id)} · ${esc(s.enc)}</option>`).join("");
-$("#rSem").onchange=renderResumo; $("#rGrp").onchange=()=>{const g=$("#rGrp").value,s=supOf($("#rSup").value);if(g&&s&&s.grupo!==g)$("#rSup").value="";renderResumo()}; $("#rSup").onchange=renderResumo;
+$("#rSem").onchange=renderResumo;
+let _semAntes=null;
+function diaUI(){ const d=$("#rDia").value, s=$("#rSem"); $("#rDiaX").hidden=!d; s.disabled=!!d;
+  if(d){ if(_semAntes===null) _semAntes=s.value; const w=String(semanaDe(d)||""); if([...s.options].some(o=>o.value===w)) s.value=w; }
+  else if(_semAntes!==null){ s.value=_semAntes; _semAntes=null; }
+  const n=$("#rDiaNote"); n.hidden=!d; if(d) n.innerHTML=`Mostrando só <b>${fmtD(d)} · ${diaDe(d)}</b>: serviços programados, executados ou feitos no lugar neste dia. O relatório e a planilha saem com este filtro.`; }
+$("#rDia").onchange=()=>{ diaUI(); renderResumo(); };
+$("#rDiaX").onclick=()=>{ $("#rDia").value=""; diaUI(); renderResumo(); }; $("#rGrp").onchange=()=>{const g=$("#rGrp").value,s=supOf($("#rSup").value);if(g&&s&&s.grupo!==g)$("#rSup").value="";renderResumo()}; $("#rSup").onchange=renderResumo;
 
 /* ---------- CSV no layout da planilha ---------- */
 function csv(){
   const sem=$("#rSem").value, grp=$("#rGrp").value, rsup=$("#rSup").value;
-  const rows=todos().filter(r=>(!sem||r.semana==sem)&&(!grp||r.grupo===grp)&&(!rsup||r.supervisao===rsup)).sort((a,b)=>(a.supervisao||"").localeCompare(b.supervisao||"")||(a.equipe||"").localeCompare(b.equipe||"")||(a.data||"").localeCompare(b.data||""));
+  const rows=todos().filter(filtroR(rptFiltro())).sort((a,b)=>(a.supervisao||"").localeCompare(b.supervisao||"")||(a.equipe||"").localeCompare(b.equipe||"")||(a.data||"").localeCompare(b.data||""));
   const num=v=>v?v.toFixed(2).replace(".",","):"";
   const H=["SUPERVISÃO","SUPERVISOR","EQUIPE","VIATURA","DATA EXECUÇÃO","DIA","REF.","BAIRRO","LOGRADOURO","TIPO","Nº PROC",...ITENS.map(i=>i.c),"RECEITA (R$)","EXECUTADO?","PRÓX. DATA EXEC.","MOTIVO",
     "SUBST. DATA EXECUÇÃO","SUBST. DIA","SUBST. BAIRRO","SUBST. LOGRADOURO","SUBST. TIPO","SUBST. Nº PROC",...ITENS.map(i=>"SUBST. "+i.c),"SUBST. RECEITA (R$)","OCORRÊNCIA","HORA CHAMADO","ORIGEM CHAMADO","PROTOCOLO","SEM PROGRAMAÇÃO","REMARCADO DE","FISCAL","OBS"];
@@ -1634,8 +1693,8 @@ function csv(){
 }
 $("#csvBtn").onclick=async()=>{
   if(!downloads){toast("Exportação indisponível nesta visualização.");return}
-  const sem=$("#rSem").value;
-  try{await downloads.save({filename:`programacao-gpe${sem?"-semana-"+sem:""}.csv`,data:new Blob([csv()],{type:"text/csv"})});}catch(e){}
+  const f=rptFiltro();
+  try{await downloads.save({filename:`programacao-gpe${f.dia?"-dia-"+f.dia:f.sem?"-semana-"+f.sem:""}.csv`,data:new Blob([csv()],{type:"text/csv"})});}catch(e){}
 };
 
 /* ---------- relatório com gráficos ---------- */
@@ -1727,8 +1786,12 @@ function chL(cats, series, fmt, W=714, H=200){
 }
 
 function periodoSem(s){const b=new Date(2026,8,7);b.setDate(b.getDate()+(s-27)*7);const e=new Date(b);e.setDate(b.getDate()+6);const f=d=>String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0");return f(b)+" a "+f(e)+"/"+e.getFullYear()}
-function rptFiltro(){return {sem:$("#rSem").value, grp:$("#rGrp").value, sup:$("#rSup").value}}
-function rptRows(f,ignoreSem){return todos().filter(r=>(ignoreSem||!f.sem||r.semana==f.sem)&&(!f.grp||r.grupo===f.grp)&&(!f.sup||r.supervisao===f.sup))}
+function rptFiltro(){const dia=$("#rDia").value; return {dia, sem:dia?String(semanaDe(dia)||""):$("#rSem").value, grp:$("#rGrp").value, sup:$("#rSup").value}}
+// um lançamento entra no dia se foi programado, executado ou teve serviço feito no lugar naquela data
+const noDia=(r,d)=>r.data===d||r.dataExec===d||r.substituto?.data===d;
+const filtroR=f=>r=>(f.dia?noDia(r,f.dia):(!f.sem||r.semana==f.sem))&&(!f.grp||r.grupo===f.grp)&&(!f.sup||r.supervisao===f.sup);
+function rptRows(f,ignoreSem){return todos().filter(ignoreSem?filtroR({...f,dia:"",sem:""}):filtroR(f))}
+const periodoTxt=f=>f.dia?`Dia ${fmtD(f.dia)} · ${diaDe(f.dia)}`:f.sem?`Semana ${f.sem}ª · ${periodoSem(+f.sem)}`:"Todas as semanas lançadas";
 
 function buildReport(){
   const f=rptFiltro(), rows=rptRows(f), now=new Date();
@@ -1754,7 +1817,7 @@ function buildReport(){
   const late=rows.filter(r=>isLate(r)).sort((a,b)=>(a.data||"").localeCompare(b.data||""));
   const supLbl=s=>s.id;
   const escopo=f.sup?`${f.sup} · ${supOf(f.sup)?.enc||""}`:(f.grp||"PODA I e PODA II");
-  const periodo=f.sem?`Semana ${f.sem}ª · ${periodoSem(+f.sem)}`:"Todas as semanas lançadas";
+  const periodo=periodoTxt(f);
 
   // evolução semanal (ignora o filtro de semana)
   const all=rptRows(f,true); const wk=[...new Set(all.map(r=>r.semana).filter(Boolean))].sort((a,b)=>a-b).slice(-12);
@@ -1790,7 +1853,7 @@ function buildReport(){
           <div class="k"><span>Programado (previsto)</span><b>${brlS(Rp)}</b><i>${esc(periodo)}</i></div>
           <div class="k"><span>Executado</span><b>${brlS(Re)}</b><i>${pct(Re,Rp)} do programado</i></div>`;
         if(!travado()){
-          let mes=mesDe(hoje()); if(f.sem){const b=new Date(2026,8,7);b.setDate(b.getDate()+(+f.sem-27)*7);mes=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0");}
+          let mes=mesDe(hoje()); if(f.dia) mes=mesDe(f.dia); else if(f.sem){const b=new Date(2026,8,7);b.setDate(b.getDate()+(+f.sem-27)*7);mes=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0");}
           const its=contratoMes(mes,todosGlobal()), pr=c=>ITENS.find(i=>i.c===c).p;
           const vc=its.reduce((a,x)=>a+x.cq*pr(x.c),0), ve=its.reduce((a,x)=>a+x.e*pr(x.c),0), vt=its.reduce((a,x)=>a+x.t*pr(x.c),0);
           // barra de referência: 100% = valor do contrato no mês
@@ -1815,7 +1878,7 @@ function buildReport(){
       ${legend([["Prevista",RC.prev],["Executada",RC.exec]])}
       ${chH(sups.map(supLbl),[{name:"Prevista",color:RC.prev,vals:sups.map(s=>S[s.id].rp)},{name:"Executada",color:RC.exec,vals:sups.map(s=>S[s.id].re)}],brlS)}</div>
 
-    ${(!travado())?(()=>{ let mes=mesDe(hoje()); if(f.sem){const b=new Date(2026,8,7);b.setDate(b.getDate()+(+f.sem-27)*7);mes=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0");}
+    ${(!travado())?(()=>{ let mes=mesDe(hoje()); if(f.dia) mes=mesDe(f.dia); else if(f.sem){const b=new Date(2026,8,7);b.setDate(b.getDate()+(+f.sem-27)*7);mes=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0");}
       const its=contratoMes(mes,todosGlobal()); const pr=c=>ITENS.find(i=>i.c===c).p; const vc=its.reduce((a,x)=>a+x.cq*pr(x.c),0), ve=its.reduce((a,x)=>a+x.e*pr(x.c),0), vt=its.reduce((a,x)=>a+x.t*pr(x.c),0);
       return `<div class="blk"><h3>Contrato mensal · ${mesLbl(mes)}</h3><p class="cap">${(f.sup||f.grp)?"Valores de todas as turmas (o contrato é único). ":""}Contrato ${brl(vc)} · executado ${brl(ve)} (${vc?Math.round(ve/vc*100):0}%) · executado + a executar ${brl(vt)} (${vc?Math.round(vt/vc*100):0}%). Barra escura = executado; clara = programação em aberto; traço = limite do contrato.</p>
       <table><thead><tr><th>Item</th><th>Contrato</th><th>Executado</th><th>A executar</th><th style="width:150px">Uso do contrato</th><th>Saldo</th><th>Situação</th></tr></thead><tbody>
@@ -1926,11 +1989,11 @@ function buildReport(){
       ${lista.map(r=>`<tr><td>${fmtDs(r.data)}</td><td class="l">${esc(r.supervisao)}</td><td>${esc((r.equipe||"").replace(" EQUIPE",""))}</td><td class="l">${esc(r.bairro)} — ${esc(r.logradouro)}</td><td class="l">${esc(r.tipo||"—")}</td><td class="l"><span class="st ${stCls(r)}">${r.ocorrencia?(OC[r.ocorrencia.tipo]||"Ocorrência"):r.avulso?"Sem prog.":stLbl[stCls(r)]}</span></td><td>${r.avulso?"—":brl(receitaDe(prevQ(r)))}</td><td>${isProg(r)?"—":brl(execRec(r))}</td></tr>`).join("")}</tbody></table></div>
 
     <div class="sign blk"><div>Supervisor(a)</div><div>Gerência de Poda e Extirpação – DIRSEN</div></div>
-    <p class="note" style="text-align:center;margin:14px 0 0">Programação GPE · desenvolvido por Victor Ricardo Porto Alcântara</p>
+
   </div></div>`;
 }
 
-function rptNome(ext){const f=rptFiltro();return `relatorio-gpe${f.sem?"-semana-"+f.sem:""}${f.sup?"-"+f.sup.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/-+$/,""):f.grp?"-"+f.grp.toLowerCase().replace(/\s+/g,"-"):""}.${ext}`}
+function rptNome(ext){const f=rptFiltro();return `relatorio-gpe${f.dia?"-dia-"+f.dia:f.sem?"-semana-"+f.sem:""}${f.sup?"-"+f.sup.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/-+$/,""):f.grp?"-"+f.grp.toLowerCase().replace(/\s+/g,"-"):""}.${ext}`}
 function loadH2P(){ if(window.html2pdf) return Promise.resolve(); return new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";s.onload=res;s.onerror=()=>rej(new Error("load"));document.head.appendChild(s)}); }
 async function rptPdf(html, label){
   await loadH2P(); try{await document.fonts.ready}catch(e){}
@@ -1951,7 +2014,7 @@ function rptHtmlDoc(html){
 }
 function abrirRelatorio(){
   if(!loaded){toast("Aguarde os dados carregarem.");return}
-  const html=buildReport(); const f=rptFiltro(); const label=(f.sem?"Semana "+f.sem+"ª":"Todas as semanas")+(f.sup?" · "+f.sup:f.grp?" · "+f.grp:"");
+  const html=buildReport(); const f=rptFiltro(); const label=(f.dia?"Dia "+fmtD(f.dia):f.sem?"Semana "+f.sem+"ª":"Todas as semanas")+(f.sup?" · "+f.sup:f.grp?" · "+f.grp:"");
   const v=document.createElement("div"); v.className="rview"; v.setAttribute("role","dialog"); v.setAttribute("aria-label","Relatório");
   v.innerHTML=`<div class="rbar"><b>Relatório</b>${downloads?`<button type="button" class="pri" id="rpPdf">Baixar PDF</button><button type="button" class="sec" id="rpHtml">Baixar HTML</button>`:""}<button type="button" class="sec" id="rpClose">Fechar</button></div><div class="rscroll"><div class="rfit" id="rpFit">${html}</div></div>`;
   document.body.appendChild(v);
@@ -2037,7 +2100,7 @@ const XL=(()=>{
         rows+=`</row>`;}
       const cols=S.widths.length?`<cols>${S.widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols>`:"";
       const pane=S.freeze?`<pane${S.freeze.c?` xSplit="${S.freeze.c}"`:""}${S.freeze.r?` ySplit="${S.freeze.r}"`:""} topLeftCell="${ref(S.freeze.r||0,S.freeze.c||0)}" activePane="${S.freeze.r&&S.freeze.c?"bottomRight":S.freeze.r?"bottomLeft":"topRight"}" state="frozen"/>`:"";
-      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheetPr>${S.tab?`<tabColor rgb="FF${S.tab}"/>`:""}<pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:${ref(S.maxR,S.maxC)}"/><sheetViews><sheetView workbookViewId="0" showGridLines="0">${pane}</sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/>${cols}<sheetData>${rows}</sheetData>${S.filter?`<autoFilter ref="${S.filter}"/>`:""}${merges.length?`<mergeCells count="${merges.length}">${merges.map(m=>`<mergeCell ref="${m}"/>`).join("")}</mergeCells>`:""}<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="${S.landscape?"landscape":"portrait"}" fitToWidth="1" fitToHeight="0"/><headerFooter><oddFooter>&amp;L&amp;8Programação GPE · desenvolvido por Victor Ricardo Porto Alcântara&amp;R&amp;8Página &amp;P de &amp;N</oddFooter></headerFooter></worksheet>`;
+      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheetPr>${S.tab?`<tabColor rgb="FF${S.tab}"/>`:""}<pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:${ref(S.maxR,S.maxC)}"/><sheetViews><sheetView workbookViewId="0" showGridLines="0">${pane}</sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/>${cols}<sheetData>${rows}</sheetData>${S.filter?`<autoFilter ref="${S.filter}"/>`:""}${merges.length?`<mergeCells count="${merges.length}">${merges.map(m=>`<mergeCell ref="${m}"/>`).join("")}</mergeCells>`:""}<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="${S.landscape?"landscape":"portrait"}" fitToWidth="1" fitToHeight="0"/><headerFooter><oddFooter>&amp;L&amp;8Programação GPE&amp;R&amp;8Página &amp;P de &amp;N</oddFooter></headerFooter></worksheet>`;
     };
     return S;
   }
@@ -2080,12 +2143,12 @@ function planilhaGPE(){
   const tot=(o={})=>st({font:{b:1,sz:9,color:"16231A"},fill:"DDE5D8",border:{t:{s:"medium",c:G},b:{s:"medium",c:G},l:{c:LN},r:{c:LN}},align:{h:o.h},num:o.num});
   const STC={SIM:["DCEFE1","14612B","Executado"],PARCIAL:["FBEBCF","7A4A00","Parcial"],"NÃO":["F8DCD9","9B1F18","Não executado"],ATRASADO:["FDE3D6","8F3A12","Sem baixa"],PROGRAMADO:["E7E7E3","4A4A46","Programado"]};
   const stCell=(r)=>{const k=stKey(r);const c=STC[k]||STC.PROGRAMADO;return [r.ocorrencia?(isProg(r)?"Aguardando":(k==="PARCIAL"?"Parcial":"Atendido")):r.avulso&&!isProg(r)?"Sem programação":c[2], st({font:{b:1,sz:9,color:c[1]},fill:c[0],border:{l:{c:"FFFFFF",s:"thin"},r:{c:"FFFFFF"},b:{c:"FFFFFF"}},align:{h:"center"}})]};
-  const periodo=f.sem?`Semana ${f.sem}ª · ${periodoSem(+f.sem)}`:"Todas as semanas lançadas";
+  const periodo=periodoTxt(f);
   const escopo=f.sup?`${f.sup} · ${supOf(f.sup)?.enc||""}`:(f.grp||"PODA I e PODA II");
   const head=(ws,ncol,titulo)=>{
     ws.set(0,0,titulo,S.title).fill(0,1,ncol-1,S.title).merge(0,0,0,ncol-1).h(0,34);
     ws.set(1,0,`COMURG · Gerência de Poda e Extirpação – DIRSEN · ${periodo} · ${escopo}`,S.sub).fill(1,1,ncol-1,S.sub).merge(1,0,1,ncol-1).h(1,20);
-    ws.set(2,0,`Gerado em ${now.toLocaleDateString("pt-BR")} às ${now.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})} por ${sessao?.nome||"—"} · app Programação GPE · desenvolvido por Victor Ricardo Porto Alcântara`,S.meta).fill(2,1,ncol-1,S.meta).merge(2,0,2,ncol-1).h(2,16);
+    ws.set(2,0,`Gerado em ${now.toLocaleDateString("pt-BR")} às ${now.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})} por ${sessao?.nome||"—"} · app Programação GPE`,S.meta).fill(2,1,ncol-1,S.meta).merge(2,0,2,ncol-1).h(2,16);
   };
   const section=(ws,r,ncol,t)=>{ws.set(r,0,t,S.sec).fill(r,1,ncol-1,S.secFill).h(r,22);};
   const sheets=[];
@@ -2133,7 +2196,7 @@ function planilhaGPE(){
 
   // contrato mensal
   if(!travado()){
-    let mes=mesDe(hoje());if(f.sem){const b=new Date(2026,8,7);b.setDate(b.getDate()+(+f.sem-27)*7);mes=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0")}
+    let mes=mesDe(hoje());if(f.dia) mes=mesDe(f.dia); else if(f.sem){const b=new Date(2026,8,7);b.setDate(b.getDate()+(+f.sem-27)*7);mes=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0")}
     const its=contratoMes(mes,todosGlobal());
     section(ws,r,NC,`CONTRATO MENSAL · ${mesLbl(mes).toUpperCase()} (todas as turmas)`);r++;
     ["Item","Descrição","Contrato (qtd)","Preço unit.","Executado","A executar","Total","Uso do contrato","Saldo (qtd)","Situação","Valor do contrato","Valor executado"].forEach((t,c)=>ws.set(r,c,t,S.th));ws.h(r,28);r++;
@@ -2269,7 +2332,7 @@ function planilhaGPE(){
 $("#xlsxBtn").onclick=async()=>{
   if(!downloads){toast("Download indisponível nesta visualização.");return}
   const b=$("#xlsxBtn"), t=b.textContent; b.disabled=true; b.textContent="Gerando…";
-  try{ const blob=planilhaGPE(); const f=rptFiltro(); await downloads.save({filename:`programacao-gpe${f.sem?"-semana-"+f.sem:""}${f.sup?"-"+f.sup.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/-+$/,""):f.grp?"-"+f.grp.toLowerCase().replace(/\s+/g,"-"):""}.xlsx`,data:blob}); }
+  try{ const blob=planilhaGPE(); const f=rptFiltro(); await downloads.save({filename:`programacao-gpe${f.dia?"-dia-"+f.dia:f.sem?"-semana-"+f.sem:""}${f.sup?"-"+f.sup.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/-+$/,""):f.grp?"-"+f.grp.toLowerCase().replace(/\s+/g,"-"):""}.xlsx`,data:blob}); }
   catch(e){ if(e&&e.code===undefined){console.error(e);toast("Não foi possível gerar a planilha.")} }
   finally{ b.disabled=false; b.textContent=t; }
 };
@@ -2358,10 +2421,10 @@ function fMapUI(){ const b=$("#bairro").value.trim(), l=$("#logradouro").value.t
 function renderPainel(){
   const host=$("#painel"); if(!host) return;
   const W=Math.max(300,Math.min(900,(host.clientWidth||Math.min(innerWidth-32,560))));
-  const sem=$("#rSem").value, grp=$("#rGrp").value, rsup=$("#rSup").value;
-  const all=todos(), rows=all.filter(r=>(!sem||r.semana==sem)&&(!grp||r.grupo===grp)&&(!rsup||r.supervisao===rsup));
+  const F=rptFiltro(), sem=F.sem, grp=F.grp, rsup=F.sup, dia=F.dia;
+  const all=todos(), rows=all.filter(filtroR(F));
   if(!loaded){host.innerHTML=`<div class="dempty full">Carregando os lançamentos…</div>`;return;}
-  if(!rows.length){host.innerHTML=`<div class="dempty full">Nenhum lançamento para este filtro. Escolha outra semana ou turma, ou lance a programação na aba Programar.</div>`;return;}
+  if(!rows.length){host.innerHTML=`<div class="dempty full">Nenhum lançamento para este filtro. Escolha outro dia, semana ou turma, ou lance a programação na aba Programar.</div>`;return;}
   const c={SIM:0,PARCIAL:0,NAO:0,late:0,fut:0}; let Rp=0,Re=0,Pp=0,Pe=0,Ep=0,Ee=0; const mot={}, bs={};
   rows.forEach(r=>{const pq=r.avulso?{}:prevQ(r), eq=execQ(r), sq=subQ(r);
     if(!r.avulso){ if(r.status==="SIM")c.SIM++; else if(r.status==="PARCIAL")c.PARCIAL++; else if(r.status==="NÃO")c.NAO++; else if(isLate(r))c.late++; else c.fut++; }
@@ -2378,9 +2441,10 @@ function renderPainel(){
     <div class="dk"><span>Árvores executadas</span><b>${nf0(Ep+Ee)}</b><i>${nf0(Ep)} podas · ${nf0(Ee)} extirp. · previstas ${nf0(Pp+Pe)}</i></div>
     <div class="dk${(c.late+ocAg)?" warn":""}"><span>Pendências</span><b>${nf0(c.late+ocAg)}</b><i>${c.late} sem baixa · ${ocAg} queda${ocAg===1?"":"s"} aguardando</i></div>
   </div>`;
+  h+=acompHtml(F)+feedHtml(F);
   // contrato do mês
   if(!travado()){
-    let mes=mesDe(hoje()); if(sem){const b=new Date(2026,8,7);b.setDate(b.getDate()+(+sem-27)*7);mes=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0");}
+    let mes=mesDe(hoje()); if(F.dia) mes=mesDe(F.dia); else if(sem){const b=new Date(2026,8,7);b.setDate(b.getDate()+(+sem-27)*7);mes=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0");}
     const its=contratoMes(mes,todosGlobal());
     const pr=cd=>ITENS.find(i=>i.c===cd).p; const VC=its.reduce((a,x)=>a+x.cq*pr(x.c),0), VE=its.reduce((a,x)=>a+x.e*pr(x.c),0), VT=its.reduce((a,x)=>a+x.t*pr(x.c),0);
     const y=+mes.slice(0,4), mo=+mes.slice(5,7), dim=new Date(y,mo,0).getDate(), hj=hoje(), dia=mesDe(hj)===mes?+hj.slice(8,10):(hj>mes?dim:0), ritmo=dia/dim;
@@ -2398,13 +2462,14 @@ function renderPainel(){
         <span style="position:absolute;top:31px;left:${100/sc}%;transform:translateX(-100%);font-size:11px;color:var(--muted);white-space:nowrap">100% · ${brlS(VC)}</span>
       </div></div>`;
   }
+  h+=evolucaoHtml(F,W-30)+resumoMesHtml(F);
   // execução por dia/semana — colunas lado a lado + total
   const isWeek=!!sem; let cats,keys;
   if(isWeek){ const b=new Date(2026,8,7);b.setDate(b.getDate()+(+sem-27)*7); keys=[...Array(7)].map((_,i)=>{const d=new Date(b);d.setDate(b.getDate()+i);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}); cats=keys.map(k=>diaDe(k)); }
   else { keys=[...new Set(rows.map(r=>r.semana).filter(Boolean))].sort((a,b)=>a-b).slice(-8); cats=keys.map(k=>k+"ª"); }
   const P=keys.map(()=>0), E=keys.map(()=>0);
   const add=(d,q)=>{const k=isWeek?d:semanaDe(d); const i=keys.indexOf(k); if(i<0)return; P[i]+=somaG(q,"P"); E[i]+=somaG(q,"E");};
-  const srcRows=isWeek?all.filter(r=>(!grp||r.grupo===grp)&&(!rsup||r.supervisao===rsup)):rows;
+  const srcRows=dia?rows:isWeek?all.filter(r=>(!grp||r.grupo===grp)&&(!rsup||r.supervisao===rsup)):rows;
   srcRows.forEach(r=>{const eq=execQ(r), sq=subQ(r); if(Object.keys(eq).length) add(r.dataExec||r.data,eq); if(Object.keys(sq).length) add(r.substituto.data||r.data,sq);});
   h+=`<div class="dcard full"><h3>Árvores executadas ${isWeek?"por dia":"por semana"} <small>${nf0(P.reduce((a,b)=>a+b,0)+E.reduce((a,b)=>a+b,0))} no período</small></h3><p class="dcap">Pela data em que o serviço foi feito. Terceira coluna = total do ${isWeek?"dia":"período"}.</p>
     <div class="dlg"><span><i style="background:var(--d-pod)"></i>Podas</span><span><i style="background:var(--d-ext)"></i>Extirpações</span><span><i style="background:linear-gradient(var(--d-ext) 0 35%,var(--d-pod) 35%)"></i>Total</span></div>
@@ -2432,6 +2497,138 @@ function renderPainel(){
     <div class="dnums"><div><b style="color:${ocAg?"var(--bad)":"var(--ink)"}">${ocAg}</b><span>aguardando</span></div><div><b>${ocA.length}</b><span>atendidos</span></div><div><b>${nf0(nG)}/${nf0(nA)}</b><span>galhos / árvores</span></div></div></div>`;
   host.innerHTML=h;
 }
+
+/* ---------- evolução (semanal / mensal / anual) e resumo mês a mês ---------- */
+let evoModo="mes"; try{ evoModo=localStorage.getItem("gpe_evo")||"mes"; }catch(e){}
+const VCMES=()=>ITENS.reduce((a,i)=>a+(CONTRATO[i.c]||0)*i.p,0);
+function agregaPeriodos(F){
+  const rows=todos().filter(r=>!r.arquivado&&(!F.grp||r.grupo===F.grp)&&(!F.sup||r.supervisao===F.sup));
+  const M={}, W={};
+  const get=(o,k)=>o[k]||(o[k]={prev:0,exec:0,ep:0,ee:0,prog:0,SIM:0,PARCIAL:0,NAO:0,oc:0});
+  rows.forEach(r=>{
+    if(!r.avulso && r.data){ const pq=prevQ(r), v=receitaDe(pq); const m=get(M,mesDe(r.data)), w=get(W,semanaDe(r.data)||0); m.prev+=v; w.prev+=v; m.prog++; w.prog++;
+      const k=r.status==="NÃO"?"NAO":r.status; if(k==="SIM"||k==="PARCIAL"||k==="NAO"){ m[k]++; w[k]++; } }
+    const eq=execQ(r); if(Object.keys(eq).length){ const d=r.dataExec||r.data; const m=get(M,mesDe(d)), w=get(W,semanaDe(d)||0), v=receitaDe(eq); m.exec+=v; w.exec+=v; m.ep+=somaG(eq,"P"); m.ee+=somaG(eq,"E"); w.ep+=somaG(eq,"P"); w.ee+=somaG(eq,"E"); }
+    const sq=subQ(r); if(Object.keys(sq).length){ const d=r.substituto.data||r.data; const m=get(M,mesDe(d)), w=get(W,semanaDe(d)||0), v=receitaDe(sq); m.exec+=v; w.exec+=v; m.ep+=somaG(sq,"P"); m.ee+=somaG(sq,"E"); w.ep+=somaG(sq,"P"); w.ee+=somaG(sq,"E"); }
+    if(r.ocorrencia){ get(M,mesDe(r.data)).oc++; }
+  });
+  delete W[0];
+  return {M,W};
+}
+function evoCols(cats, series, W, ref){
+  const H=220, top=22, bot=26, left=46, pw=W-left-6, ph=H-top-bot;
+  const raw=Math.max(1,ref?ref.v:0,...series.flatMap(s=>s.vals));
+  const p10=Math.pow(10,Math.floor(Math.log10(raw/4))), step=[1,2,2.5,5,10].map(m=>m*p10).find(v=>v*4>=raw)||10*p10, max=step*4;
+  const n=series.length, slot=pw/cats.length, gap=2, bw=Math.max(4,Math.min(26,(slot*.8-gap*(n-1))/n)), gw=bw*n+gap*(n-1), y=v=>top+ph-v/max*ph;
+  const lbl=slot>=58; let g="";
+  for(let t=0;t<=4;t++){const yy=y(step*t); g+=`<line class="${t?"g":"b"}" x1="${left}" x2="${W-6}" y1="${yy}" y2="${yy}"/><text x="${left-6}" y="${yy+3.5}" font-size="10" text-anchor="end">${brlS(step*t).replace("R$ ","")}</text>`;}
+  cats.forEach((c,i)=>{ const x0=left+slot*i+(slot-gw)/2;
+    series.forEach((s,k)=>{ const v=s.vals[i]||0; if(!v) return; const x=x0+k*(bw+gap), h=v/max*ph, yy=top+ph-h, rr=Math.min(4,h,bw/2);
+      g+=`<g class="hv"><path d="M${x},${top+ph}V${yy+rr}Q${x},${yy} ${x+rr},${yy}H${x+bw-rr}Q${x+bw},${yy} ${x+bw},${yy+rr}V${top+ph}Z" style="fill:${s.color}"><title>${esc(c)} · ${s.name}: ${brl(v)}</title></path>${lbl&&k===n-1?`<text class="n" x="${x+bw/2}" y="${yy-4}" font-size="9.5" text-anchor="middle">${brlS(v).replace("R$ ","")}</text>`:""}</g>`; });
+    g+=`<text x="${left+slot*i+slot/2}" y="${H-8}" font-size="10.5" text-anchor="middle">${esc(c)}</text>`; });
+  if(ref){ const yy=y(ref.v); g+=`<line x1="${left}" x2="${W-6}" y1="${yy}" y2="${yy}" style="stroke:var(--ink);stroke-width:1.5;stroke-dasharray:5 4"/><text class="v" x="${W-8}" y="${yy-5}" font-size="10" text-anchor="end">${esc(ref.t)}</text>`; }
+  return `<svg class="dv" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(series.map(s=>s.name+": "+cats.map((c,i)=>c+" "+brl(s.vals[i]||0)).join(", ")).join("; "))}">${g}</svg>`;
+}
+function evoLine(cats, series, W){
+  const H=220, top=22, bot=26, left=46, pw=W-left-14, ph=H-top-bot;
+  const raw=Math.max(1,...series.flatMap(s=>s.vals)); const p10=Math.pow(10,Math.floor(Math.log10(raw/4))), step=[1,2,2.5,5,10].map(m=>m*p10).find(v=>v*4>=raw)||10*p10, max=step*4;
+  const x=i=>left+(cats.length<2?pw/2:i*pw/(cats.length-1)), y=v=>top+ph-v/max*ph; let g="";
+  for(let t=0;t<=4;t++){const yy=y(step*t); g+=`<line class="${t?"g":"b"}" x1="${left}" x2="${W-6}" y1="${yy}" y2="${yy}"/><text x="${left-6}" y="${yy+3.5}" font-size="10" text-anchor="end">${brlS(step*t).replace("R$ ","")}</text>`;}
+  series.forEach(s=>{ const pts=s.vals.map((v,i)=>v==null?null:[x(i),y(v)]).filter(Boolean); if(!pts.length) return;
+    g+=`<polyline points="${pts.map(p=>p.join(",")).join(" ")}" style="fill:none;stroke:${s.color};stroke-width:2.5;${s.dash?"stroke-dasharray:6 4;":""}stroke-linejoin:round;stroke-linecap:round"/>`;
+    s.vals.forEach((v,i)=>{ if(v==null) return; g+=`<circle cx="${x(i)}" cy="${y(v)}" r="4" style="fill:${s.color};stroke:var(--surface);stroke-width:2"><title>${esc(cats[i])} · ${s.name}: ${brl(v)}</title></circle>`; });
+    const li=s.vals.map((v,i)=>v==null?-1:i).filter(i=>i>=0).pop(); if(li!=null&&li>=0&&s.label) g+=`<text class="v" x="${x(li)}" y="${y(s.vals[li])-9}" font-size="10" text-anchor="${li===cats.length-1?"end":"middle"}">${brlS(s.vals[li])}</text>`; });
+  cats.forEach((c,i)=>{ g+=`<text x="${x(i)}" y="${H-8}" font-size="10.5" text-anchor="middle">${esc(c)}</text>`; });
+  return `<svg class="dv" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(series.map(s=>s.name+": "+cats.map((c,i)=>c+" "+(s.vals[i]==null?"—":brl(s.vals[i]))).join(", ")).join("; "))}">${g}</svg>`;
+}
+function evolucaoHtml(F, W){
+  const {M,W:WK}=agregaPeriodos(F), vc=VCMES(), mostraCt=!travado();
+  const modos=[["sem","Semanal"],["mes","Mensal"],["ano","Anual"]];
+  let corpo="", cap="";
+  if(evoModo==="sem"){
+    const ks=Object.keys(WK).map(Number).sort((a,b)=>a-b).slice(-12);
+    cap="Receita prevista e executada nas últimas "+ks.length+" semanas.";
+    corpo=ks.length?`<div class="dlg"><span><i style="background:var(--c-prev)"></i>Prevista</span><span><i style="background:var(--c-exec)"></i>Executada</span></div>`+evoCols(ks.map(k=>k+"ª"),[{name:"Prevista",color:"var(--c-prev)",vals:ks.map(k=>WK[k].prev)},{name:"Executada",color:"var(--c-exec)",vals:ks.map(k=>WK[k].exec)}],W):"";
+  } else if(evoModo==="mes"){
+    const ks=Object.keys(M).filter(Boolean).sort().slice(-12);
+    cap="Receita prevista e executada por mês"+(mostraCt?". Linha tracejada = valor mensal do contrato.":".");
+    corpo=ks.length?`<div class="dlg"><span><i style="background:var(--c-prev)"></i>Prevista</span><span><i style="background:var(--c-exec)"></i>Executada</span>${mostraCt?`<span><i style="background:var(--ink);height:2px;vertical-align:3px"></i>Contrato mensal</span>`:""}</div>`+evoCols(ks.map(k=>mesLbl(k).replace(/\/\d{2}(\d{2})$/,"/$1")),[{name:"Prevista",color:"var(--c-prev)",vals:ks.map(k=>M[k].prev)},{name:"Executada",color:"var(--c-exec)",vals:ks.map(k=>M[k].exec)}],W,mostraCt?{v:vc,t:"Contrato "+brlS(vc)}:null):"";
+  } else {
+    const anos=[...new Set(Object.keys(M).filter(Boolean).map(k=>k.slice(0,4)))].sort(); const ano=anos.includes(hoje().slice(0,4))?hoje().slice(0,4):anos[anos.length-1];
+    if(ano){ const mesHoje=hoje().slice(0,7); const prim=Object.keys(M).filter(k=>k&&k.startsWith(ano)).sort()[0]; const ini=+prim.slice(5,7);
+      const ms=[...Array(12-ini+1)].map((_,i)=>ano+"-"+String(ini+i).padStart(2,"0"));
+      let ae=0,ap=0,ac=0; const E=[],P=[],C=[];
+      ms.forEach(m=>{ const o=M[m]; const fut=m>mesHoje; ae+=o?.exec||0; ap+=o?.prev||0; ac+=vc; E.push(fut&&!o?.exec?null:ae); P.push(fut&&!o?.prev?null:ap); C.push(ac); });
+      const totE=ae, mesesCor=ms.filter(m=>m<=mesHoje&&M[m]).length;
+      const nCt=ms.filter(m=>m<=mesHoje).length;
+      cap=`Acumulado de ${ano} desde ${mesLbl(prim)}: executado ${brlS(totE)} de ${brlS(ap)} previstos${mostraCt?` · contrato acumulado no período ${brlS(vc*nCt)} (${vc*nCt?Math.round(totE/(vc*nCt)*100):0}% atingido)`:""}.`;
+      corpo=`<div class="dlg"><span><i style="background:var(--c-exec)"></i>Executado acumulado</span><span><i style="background:var(--c-prev)"></i>Previsto acumulado</span>${mostraCt?`<span><i style="background:var(--ink);height:2px;vertical-align:3px"></i>Contrato acumulado</span>`:""}</div>`+
+        evoLine(ms.map(m=>MESES[+m.slice(5,7)-1]),[...(mostraCt?[{name:"Contrato acumulado",color:"var(--ink)",vals:C,dash:true}]:[]),{name:"Previsto acumulado",color:"var(--c-prev)",vals:P},{name:"Executado acumulado",color:"var(--c-exec)",vals:E,label:true}],W);
+    }
+  }
+  return `<div class="dcard full" id="evo"><h3>Evolução <small>${histCarregado?"com histórico completo":"últimos 150 dias · toque em “Carregar histórico anterior” para incluir mais"}</small></h3>
+    <div class="evot" role="group" aria-label="Período da evolução">${modos.map(([k,t])=>`<button type="button" data-evo="${k}" aria-pressed="${evoModo===k}">${t}</button>`).join("")}</div>
+    <p class="dcap">${cap}</p>${corpo||`<div class="dempty">Sem lançamentos para mostrar.</div>`}</div>`;
+}
+function resumoMesHtml(F){
+  const {M}=agregaPeriodos(F), vc=VCMES(), mostraCt=!travado(), mesHoje=hoje().slice(0,7);
+  const ks=Object.keys(M).filter(Boolean).sort().reverse(); if(!ks.length) return "";
+  const pc=(v,b)=>{ if(!b) return "—"; const x=Math.round(v/b*100); return `<span class="pc ${x>=90?"ok":x>=60?"wr":"bd"}">${x}%</span>`; };
+  const T={prev:0,exec:0,ep:0,ee:0,prog:0,SIM:0,PARCIAL:0,NAO:0,oc:0}; ks.forEach(k=>Object.keys(T).forEach(c=>T[c]+=M[k][c]||0));
+  return `<div class="dcard full"><h3>Resumo mês a mês <small>${ks.length} mês${ks.length>1?"es":""}</small></h3>
+    <p class="dcap">Previsto pela data programada; executado pela data em que foi feito (inclui serviço feito no lugar e quedas). Cumprimento = executado ÷ previsto.</p>
+    <div class="mtab"><table><thead><tr><th>Mês</th><th>Previsto</th><th>Executado</th><th>Cumprim.</th>${mostraCt?"<th>% contrato</th>":""}<th>Podas</th><th>Extirp.</th><th>Programados</th><th>Exec.</th><th>Parc.</th><th>Não exec.</th><th>Quedas</th></tr></thead><tbody>
+    ${ks.map(k=>{const o=M[k];return `<tr class="${k===mesHoje?"atual":""}"><td><b>${mesLbl(k)}</b>${k===mesHoje?" <small style='color:var(--muted)'>em andamento</small>":""}</td><td>${brl(o.prev)}</td><td><b>${brl(o.exec)}</b></td><td>${pc(o.exec,o.prev)}</td>${mostraCt?`<td>${pc(o.exec,vc)}</td>`:""}<td>${nf0(o.ep)}</td><td>${nf0(o.ee)}</td><td>${o.prog}</td><td>${o.SIM}</td><td>${o.PARCIAL}</td><td>${o.NAO}</td><td>${o.oc}</td></tr>`}).join("")}
+    </tbody><tfoot><tr><td>Total</td><td>${brl(T.prev)}</td><td>${brl(T.exec)}</td><td>${pc(T.exec,T.prev)}</td>${mostraCt?`<td>${pc(T.exec,vc*ks.length)}</td>`:""}<td>${nf0(T.ep)}</td><td>${nf0(T.ee)}</td><td>${T.prog}</td><td>${T.SIM}</td><td>${T.PARCIAL}</td><td>${T.NAO}</td><td>${T.oc}</td></tr></tfoot></table></div></div>`;
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("#evo [data-evo]"); if(!b) return; evoModo=b.dataset.evo; try{localStorage.setItem("gpe_evo",evoModo)}catch(x){} renderPainel(); });
+
+/* ---------- acompanhamento: grade turma × dia + movimentação ---------- */
+const ST_COR={SIM:"var(--ok)",PARCIAL:"var(--warn)","NÃO":"var(--bad)",ATRASADO:"var(--accent)",PROGRAMADO:"var(--idle)"};
+const ST_NOME={SIM:"Executado",PARCIAL:"Parcial","NÃO":"Não executado",ATRASADO:"Sem baixa",PROGRAMADO:"A executar"};
+let acSel=null;
+function acompHtml(F){
+  const sw=+(F.sem||semanaDe(F.dia||hoje())||0); if(!sw) return "";
+  const b0=new Date(2026,8,7); b0.setDate(b0.getDate()+(sw-27)*7);
+  const dias=[...Array(7)].map((_,i)=>{const d=new Date(b0);d.setDate(b0.getDate()+i);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")});
+  const sups=SUPS.filter(s=>(!F.grp||s.grupo===F.grp)&&(!F.sup||s.id===F.sup));
+  const base=todos().filter(r=>!r.ocorrencia&&!r.avulso&&!r.arquivado&&dias.includes(r.data)&&sups.some(s=>s.id===r.supervisao));
+  const ord=["NÃO","ATRASADO","PARCIAL","SIM","PROGRAMADO"];
+  const cont={}; base.forEach(r=>{const k=stKey(r); cont[k]=(cont[k]||0)+1;});
+  const tot=base.length, baix=(cont.SIM||0)+(cont.PARCIAL||0)+(cont["NÃO"]||0), hj=hoje();
+  if(acSel&&!dias.includes(acSel.d)) acSel=null;
+  let h=`<div class="dcard full" id="acomp"><h3>Acompanhamento da programação · ${sw}ª semana <small>${tot} programado${tot===1?"":"s"} · ${baix} com baixa · ${cont.ATRASADO||0} sem baixa</small></h3>
+    <p class="dcap">Cada bolinha é um serviço programado. Toque num dia para ver os serviços da turma.</p>
+    <div class="alg">${ord.map(k=>`<span><i style="background:${ST_COR[k]}"></i>${ST_NOME[k]}${cont[k]?" ("+cont[k]+")":""}</span>`).join("")}</div>
+    <div class="agrid"><table><thead><tr><th class="tm">Turma</th>${dias.map(d=>`<th class="${d===hj?"hj":""}${F.dia===d?" hj":""}">${diaDe(d)}<small>${d.slice(8,10)}/${d.slice(5,7)}</small></th>`).join("")}</tr></thead><tbody>`;
+  sups.forEach(s=>{ h+=`<tr><td class="tm">${esc(s.id)}<small>${esc(s.enc)}</small></td>`;
+    dias.forEach(d=>{ const rs=base.filter(r=>r.supervisao===s.id&&r.data===d).sort((a,b)=>ord.indexOf(stKey(a))-ord.indexOf(stKey(b)));
+      if(!rs.length){ h+=`<td><div class="acell vazio" aria-hidden="true">—</div></td>`; return; }
+      const al=rs.some(r=>{const k=stKey(r);return k==="ATRASADO"||k==="NÃO"});
+      const sel=acSel&&acSel.s===s.id&&acSel.d===d;
+      h+=`<td><button type="button" class="acell${al?" alerta":""}" data-ac="${esc(s.id)}|${d}" aria-pressed="${sel}" title="${esc(s.id)} · ${fmtD(d)}: ${rs.map(r=>ST_NOME[stKey(r)]).join(", ")}"><b>${rs.length}</b><span class="adots">${rs.map(r=>`<i style="background:${ST_COR[stKey(r)]||"var(--idle)"}"></i>`).join("")}</span></button></td>`; });
+    h+=`</tr>`; });
+  h+=`</tbody></table></div>`;
+  if(acSel){ const rs=base.filter(r=>r.supervisao===acSel.s&&r.data===acSel.d);
+    h+=`<div class="adet"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b style="font:700 15px var(--display);letter-spacing:.04em;text-transform:uppercase">${esc(acSel.s)} · ${diaDe(acSel.d)} ${fmtD(acSel.d)}</b><button type="button" class="btn sec" data-acx style="min-height:34px;padding:0 10px;font-size:12px">Fechar</button></div>
+      ${rs.map(r=>{const k=stKey(r);return `<button type="button" class="it" data-acid="${esc(r.id)}"><span class="lc">${esc(r.bairro)} — ${esc(r.logradouro)}</span><span class="pill ${k}">${ST_NOME[k]}</span>
+        <span class="mt">${esc(r.equipe||"")} · previsto ${brl(receitaDe(prevQ(r)))}${k==="SIM"||k==="PARCIAL"?" · executado "+brl(execRec(r)):""}${k==="NÃO"?" · remarcado p/ "+fmtD(r.proxData)+(r.motivo?" · "+esc(r.motivo):""):""}${r.impactoQueda?" · afetado por queda":""}</span></button>`}).join("")}</div>`; }
+  h+=`</div>`;
+  return h;
+}
+function feedHtml(F){
+  const ev=[]; todos().filter(r=>(!F.grp||r.grupo===F.grp)&&(!F.sup||r.supervisao===F.sup)).forEach(r=>(r.log||[]).forEach(l=>{ if(l?.em) ev.push({r,l}); }));
+  ev.sort((a,b)=>(b.l.em||"").localeCompare(a.l.em||""));
+  const top=ev.slice(0,15), hj=new Date().toDateString();
+  const quando=s=>{const d=new Date(s); return d.toDateString()===hj?d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}):d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+"<br>"+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});};
+  return `<div class="dcard full"><h3>Movimentação recente <small>últimos ${top.length} lançamentos</small></h3><p class="dcap">O que foi programado, baixado, remarcado ou corrigido, do mais novo para o mais antigo.</p>
+    ${top.length?`<div class="feed">${top.map(({r,l})=>`<div class="ev"><time>${quando(l.em)}</time><span class="ac"><b>${esc(l.por||"—")}</b> · ${esc(l.acao||"")}</span><span class="lo">${esc(r.supervisao||"")} · ${esc(r.bairro||"")} — ${esc(r.logradouro||"")}</span></div>`).join("")}</div>`:`<div class="dempty">Nenhuma movimentação registrada ainda.</div>`}</div>`;
+}
+document.addEventListener("click",e=>{
+  const c=e.target.closest("#acomp [data-ac]"); if(c){ const [s,d]=c.dataset.ac.split("|"); acSel=(acSel&&acSel.s===s&&acSel.d===d)?null:{s,d}; renderPainel(); const el=document.querySelector("#acomp .adet"); if(el) el.scrollIntoView({block:"nearest",behavior:"smooth"}); return; }
+  if(e.target.closest("#acomp [data-acx]")){ acSel=null; renderPainel(); return; }
+  const it=e.target.closest("#acomp [data-acid]"); if(it){ const r=byId(it.dataset.acid); if(r) detalhe(r,false,true); }
+});
 function dCols(cats,P,E,W){
   const H=210, top=20, bot=24, left=34, pw=W-left-4, ph=H-top-bot, T=cats.map((_,i)=>P[i]+E[i]);
   const raw=Math.max(1,...T), p10=Math.pow(10,Math.floor(Math.log10(raw/4))), step=Math.max(1,[1,2,5,10].map(m=>m*p10).find(v=>v*4>=raw)||10*p10), max=step*4;
