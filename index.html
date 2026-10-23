@@ -484,6 +484,10 @@ nav.tabs button[aria-current="page"]{background:linear-gradient(180deg,#ff8c42 0
 .midst{font-size:12px;color:var(--muted)} .midslot.ok .midst{color:var(--ok);font-weight:600} .midst.bad{color:var(--bad);font-weight:600}
 .ksub{margin:10px 0 4px}.ksub button{min-height:42px;font-size:14px;flex:1}
 #kGraf .filters .f select,#kGraf .filters .f input{min-height:44px}
+.lkrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding-top:8px;border-top:1px solid var(--line)}
+.lkrow b{display:block;font-size:14px}.lkrow small{display:block;font-size:12px;color:var(--muted)}.lkrow a{font-size:13px;color:var(--brand);overflow-wrap:anywhere}
+.lkrow .btn{min-height:40px;padding:0 14px;font-size:13px}
+.kbx{padding:12px 14px;display:block}.kbx summary{cursor:pointer;font:700 15px var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--brand)}
 .midbtns{display:flex;flex-wrap:wrap;gap:6px}
 .midbtn{min-height:40px!important;font-size:13px!important;display:inline-grid;place-items:center;padding:0 12px;justify-self:start;cursor:pointer}
 /* mostrar / ocultar senha */
@@ -659,6 +663,17 @@ nav.tabs button[aria-current="page"]{background:linear-gradient(180deg,#ff8c42 0
         <label class="f">Repita a senha<input id="stPin2" type="password"></label></div>
         <div class="err" id="stErr" hidden></div>
         <button type="submit" class="btn pri">Criar acesso da gerência</button>
+      </div>
+    </form>
+    <form id="trocaForm" novalidate>
+      <div id="lgTroca" class="lg-sec" hidden>
+        <h2>Crie sua senha</h2>
+        <p class="note" style="margin:0" id="trTxt">Primeiro acesso: troque a senha que a gerência passou por uma senha só sua. Ninguém, nem a gerência, fica sabendo dela.</p>
+        <label class="f">Nova senha<input id="trPin" type="password" autocomplete="new-password" placeholder="Mínimo 6 caracteres"></label>
+        <label class="f">Repita a nova senha<input id="trPin2" type="password" autocomplete="new-password"></label>
+        <div class="err" id="trErr" hidden></div>
+        <button type="submit" class="btn pri">Salvar senha e entrar</button>
+        <button type="button" class="btn sec" id="trVoltar" style="min-height:44px;font-size:14px">Voltar</button>
       </div>
     </form>
     <div id="lgWait" class="lg-sec" hidden><p id="lgWaitTxt" style="margin:0">Carregando…</p></div>
@@ -852,6 +867,13 @@ nav.tabs button[aria-current="page"]{background:linear-gradient(180deg,#ff8c42 0
     <input type="date" id="kData" aria-label="Dia">
   </div>
   <div class="actions" style="grid-template-columns:1fr;margin:10px 0 0"><button type="button" class="btn pri" id="kNovo">Fazer checklist de fim de expediente</button><button type="button" class="btn ocbtn" id="kManut" style="min-height:48px;font-size:15px">Comunicar defeito / manutenção</button><p class="note" id="kSoSup" hidden style="margin:0">A assinatura do checklist e da comunicação de defeito é sempre do supervisor da turma: se você preencher, o supervisor assina no seu aparelho com a matrícula e a senha de assinatura dele.</p><button type="button" class="btn sec" id="kSenha" style="min-height:42px;font-size:14px">Minha senha de assinatura</button></div>
+  <details class="card kbx" style="margin-top:10px"><summary>⬇ Baixar checklists ou comunicações em PDF</summary>
+    <p class="note" style="margin:6px 0 0">Junta vários documentos num PDF só, cada um começando numa página nova. Usa a turma escolhida acima: <b>todas</b>, <b>PODA I</b>, <b>PODA II</b> ou uma turma.</p>
+    <label class="f" style="margin-top:8px">O que baixar<select id="kBxTipo"><option value="chk">Checklists de fim de expediente</option><option value="man">Comunicações de defeito / manutenção</option></select></label>
+    <label class="f" style="margin-top:8px">Período<select id="kBxPer"><option value="dia">Só o dia escolhido acima</option><option value="sem">A semana do dia escolhido</option><option value="mes">O mês do dia escolhido</option><option value="tudo">Todos (últimos 90 dias)</option></select></label>
+    <p class="note" id="kBxInfo" style="margin:6px 0 0"></p>
+    <button type="button" class="btn pri" id="kBxBtn" style="width:100%;margin-top:8px;min-height:46px;font-size:15px">Baixar PDF</button>
+  </details>
   <div id="kList"></div>
   </div>
   <div id="kGraf" hidden>
@@ -1068,14 +1090,14 @@ const matKey=s=>(s||"").trim().toLowerCase().replace(/\s+/g,"");
 const matDe=u=>matKey(u.matricula || (/^m\d+$/i.test((u.nome||"").trim())?u.nome:""));
 const acharMat=(m,exceto)=>Object.entries(acesso||{}).find(([id,u])=>id!==exceto && matDe(u) && matDe(u)===matKey(m));
 
-function lgShow(which){["lgMain","lgSetup","lgWait"].forEach(k=>$("#"+k).hidden=k!==which)}
+function lgShow(which){["lgMain","lgSetup","lgWait","lgTroca"].forEach(k=>$("#"+k).hidden=k!==which)}
 function renderLogin(){
   const box=$("#login");
   if(sessao && acessoLoaded && !(acesso?.[sessao.id]?.ativo)){ sessao=null; ls.set("gpe_sessao",null); toast("Seu acesso foi alterado pela gerência. Entre novamente."); }
   if(sessao && acessoLoaded && acesso?.[sessao.id]){ const u=acesso[sessao.id]; if(u.nome!==sessao.nome||u.perfil!==sessao.perfil||(u.sup||"")!==sessao.sup){ sessao={...sessao,nome:u.nome,perfil:u.perfil,sup:u.sup||""}; ls.set("gpe_sessao",sessao); if(travado()) ls.set("gpe_sup",sessao.sup); setTimeout(()=>{limpar("prog");renderAll()},0); } }
   if(sessao){ box.hidden=true; document.body.classList.remove("locked"); applyPerms(); return; }
   box.hidden=false; document.body.classList.add("locked");
-  if(!acessoLoaded){ $("#lgWaitTxt").textContent = db===false ? "Não foi possível conectar ao banco do app. Verifique se você está conectado à sua conta e tem acesso a este app." : "Carregando…"; lgShow("lgWait"); return; }
+  if(!acessoLoaded){ $("#lgWaitTxt").textContent = db===false ? (window.GPE_NETLIFY ? (window.GPE_ERRO_BANCO||"Não foi possível conectar ao banco (Supabase). Confira a internet e tente de novo.") : !/claude|claudeusercontent|^$|localhost|127\.0\.0\.1/.test(location.hostname) ? "O arquivo camada-gpe.js não foi encontrado neste site. Envie o camada-gpe.js para o GitHub, na mesma pasta do index.html, e espere o Netlify publicar." : "Não foi possível conectar ao banco do app. Verifique se você está conectado à sua conta e tem acesso a este app.") : "Carregando…"; lgShow("lgWait"); return; }
   const lista=Object.entries(acesso||{}).filter(([,u])=>u.ativo&&u.hash);
   const temGer=lista.some(([,u])=>u.perfil==="gerencia");
   if(!temGer){
@@ -1087,6 +1109,12 @@ function renderLogin(){
   lgShow("lgMain");
 }
 let lgFalhas=0, lgBloq=0;
+// senha de entrar própria do usuário (troca obrigatória no primeiro acesso e depois que a gerência redefine a senha)
+// fica em assinaturas/login_<id> (o documento de acessos só a gerência altera)
+async function loginDoc(uid){ if(assins["login_"+uid]) return assins["login_"+uid]; if(!db) return null; try{ const s=await db.collection(ASS_COL).doc("login_"+uid).get(); return s.exists?s.data():null; }catch(e){ return null; } }
+const loginValido=(u,L)=>!!(L&&L.hash&&(!u.senhaEm||(L.em||"")>u.senhaEm));
+async function senhaConfere(uid,pin){ const u=acesso?.[uid]; if(!u) return false; const L=await loginDoc(uid); return loginValido(u,L) ? (await hashPin(L.salt,pin))===L.hash : (await hashPin(u.salt,pin))===u.hash; }
+let trocaPend=null;
 async function entrar(ev){
   ev?.preventDefault();
   const mat=$("#lgMat").value, pin=$("#lgPin").value, err=$("#lgErr");
@@ -1096,15 +1124,29 @@ async function entrar(ev){
   const achado=acharMat(mat); const id=achado?.[0], u=achado?.[1];
   if(!u){err.textContent="Matrícula não cadastrada. Fale com a gerência.";err.hidden=false;return}
   if(!u.ativo||!u.hash){err.textContent="Esta matrícula ainda não está liberada. Fale com a gerência.";err.hidden=false;return}
-  if(await hashPin(u.salt,pin)!==u.hash){ lgFalhas++; if(lgFalhas>=5){lgBloq=Date.now()+60000;lgFalhas=0}
+  const L=await loginDoc(id), propria=loginValido(u,L);
+  if((await hashPin(propria?L.salt:u.salt,pin))!==(propria?L.hash:u.hash)){ lgFalhas++; if(lgFalhas>=5){lgBloq=Date.now()+60000;lgFalhas=0}
     err.textContent="Senha incorreta."; err.hidden=false; $("#lgPin").value=""; $("#lgPin").focus(); return; }
-  lgFalhas=0; sessao={id,nome:u.nome,perfil:u.perfil,sup:u.sup||""}; ls.set("gpe_sessao",sessao); if(window.GPE_NETLIFY) canAdmin=u.perfil==="gerencia"; ls.set("gpe_ultimo",id); ls.set("gpe_ultmat",matKey(mat));
+  lgFalhas=0;
+  if(!propria && u.perfil!=="gerencia"){ trocaPend={id,u,mat,pin}; $("#trTxt").textContent=u.senhaEm&&L?"A gerência redefiniu a sua senha. Crie uma senha nova, só sua, para continuar.":"Primeiro acesso: troque a senha que a gerência passou por uma senha só sua. Ninguém, nem a gerência, fica sabendo dela."; $("#trPin").value=""; $("#trPin2").value=""; $("#trErr").hidden=true; lgShow("lgTroca"); $("#trPin").focus(); return; }
+  concluirEntrada(id,u,mat);
+}
+function concluirEntrada(id,u,mat){
+  sessao={id,nome:u.nome,perfil:u.perfil,sup:u.sup||""}; ls.set("gpe_sessao",sessao); if(window.GPE_NETLIFY) canAdmin=u.perfil==="gerencia"; ls.set("gpe_ultimo",id); ls.set("gpe_ultmat",matKey(mat));
   if(travado()){ ls.set("gpe_sup",sessao.sup); const t=ls.get("gpe_turma",{}); ls.set("gpe_turma",{...t,sup:sessao.sup,fiscal:sessao.perfil==="fiscal"?sessao.nome:t.fiscal}); }
   $("#lgPin").value="";
   renderLogin(); limpar("prog"); show(sessao.perfil==="fiscal"?"campo":soLeitura()?"resumo":ls.get("gpe_tab","campo")); renderAll(); scrollTo(0,0);
   toast("Bem-vindo, "+sessao.nome+".");
 }
 $("#lgForm").addEventListener("submit",entrar);
+$("#trVoltar").onclick=()=>{ trocaPend=null; $("#lgPin").value=""; lgShow("lgMain"); };
+$("#trocaForm").addEventListener("submit",async ev=>{ ev.preventDefault(); const t=trocaPend, err=$("#trErr"); if(!t) return lgShow("lgMain");
+  const p1=$("#trPin").value, p2=$("#trPin2").value, e=x=>{err.textContent=x;err.hidden=false};
+  if(!pinOk(p1)) return e(MSG_SENHA); if(p1!==p2) return e("As duas senhas não são iguais."); if(p1===t.pin) return e("A senha nova precisa ser diferente da senha que a gerência passou.");
+  if(!db) return e("Sem conexão com o banco. Tente de novo.");
+  const salt=novoSal(), doc={salt,hash:await hashPin(salt,p1),em:new Date().toISOString(),nome:t.u.nome,tipo:"login"};
+  try{ await db.collection(ASS_COL).doc("login_"+t.id).set(doc); assins["login_"+t.id]=doc; }catch(x){ return e("Não foi possível salvar a senha agora. Tente de novo."); }
+  trocaPend=null; $("#lgPin").value=""; toast("Senha nova salva."); concluirEntrada(t.id,t.u,t.mat); });
 $("#sairBtn").onclick=()=>{ sessao=null; ls.set("gpe_sessao",null); if(!isGer()) ls.set("gpe_sup",""); limpar("prog"); renderLogin(); };
 
 $("#setupForm").addEventListener("submit",async ev=>{
@@ -1180,11 +1222,11 @@ function abrirAcessos(){
   $("#acClose").onclick=close;
   host.querySelectorAll("[data-edperf]").forEach(s=>s.onchange=()=>{const w=s.closest(".inline").querySelector("[data-edsupw]");w.hidden=GERAL.has(s.value)});
   const perf=$("#nuPerf"); if(perf) perf.onchange=()=>{$("#nuSupW").hidden=GERAL.has(perf.value)};
-  const salvar=async(id,dados,msg)=>{ try{ await db.doc("cfg/acesso").update({usuarios:{[id]:dados}}); toast(msg); abrirAcessos(); }catch(e){ toast("Não foi possível salvar. Só dono ou editor do app altera acessos."); } };
+  const salvar=async(id,dados,msg)=>{ try{ await dbUpdate(db.doc("cfg/acesso"),{usuarios:{[id]:dados}}); toast(msg); abrirAcessos(); }catch(e){ toast("Não foi possível salvar. Só dono ou editor do app altera acessos."); } };
   host.querySelector(".panel").addEventListener("click",async e=>{
     const sp=e.target.closest("[data-savepin]"); if(sp){const id=sp.dataset.savepin, pin=host.querySelector(`[data-pin="${id}"]`).value;
       if(!pinOk(pin)){toast(MSG_SENHA);return}
-      const salt=novoSal(); await salvar(id,{salt,hash:await hashPin(salt,pin),ativo:true},"Senha de "+acesso[id].nome+" salva."); return;}
+      const salt=novoSal(); await salvar(id,{salt,hash:await hashPin(salt,pin),ativo:true,senhaEm:new Date().toISOString()},"Senha de "+acesso[id].nome+" salva. No próximo acesso a pessoa cria uma senha própria."); return;}
     const tg=e.target.closest("[data-toggle]"); if(tg){const id=tg.dataset.toggle, u=acesso[id];
       if(u.ativo&&tg.dataset.armed!=="1"){tg.dataset.armed="1";tg.textContent="Confirmar";return}
       await salvar(id,{ativo:!u.ativo},u.ativo?u.nome+" desativado.":u.nome+" reativado."); return;}
@@ -1210,25 +1252,34 @@ function abrirAcessos(){
       if(!matricula){toast("Informe a matrícula.");return}
       const dupM=acharMat(matricula); if(dupM){toast("A matrícula "+matricula+" já está cadastrada para "+dupM[1].nome+".");return}
       if(!nome){toast("Informe o nome.");return} if(!pinOk(pin)){toast(MSG_SENHA);return}
-      const salt=novoSal(); await salvar(uidNovo(),{nome,matricula,perfil:p,sup,salt,hash:await hashPin(salt,pin),ativo:true,criadoEm:new Date().toISOString()},nome+" adicionado.");
+      const salt=novoSal(); await salvar(uidNovo(),{nome,matricula,perfil:p,sup,salt,hash:await hashPin(salt,pin),ativo:true,criadoEm:new Date().toISOString(),senhaEm:new Date().toISOString()},nome+" adicionado.");
     }
   });
 }
 $("#acessosBtn").onclick=abrirAcessos;
 /* ---------- atualizações do app (só gerente): versões + arquivos para GitHub / Netlify / AI Studio ---------- */
-const APP_VERSAO="2026.10.23";
+const APP_VERSAO="2026.10.23b";
 const VERSOES=[
+  {v:"2026.10.23b", d:"23/10/2026", itens:["Checklist: baixar vários checklists ou várias comunicações de defeito num PDF só (um por página), por dia, semana, mês ou todos, para todas as turmas, PODA I, PODA II ou uma turma","Fotos e vídeo do checklist e da manutenção abrem direto do Supabase (não dependem mais do redirecionamento do netlify.toml) e saem no PDF","camada-gpe.js mudou: suba junto com o index.html","Troca de senha obrigatória no primeiro acesso e sempre que a gerência redefinir a senha: a pessoa cria uma senha só dela antes de entrar","Aba Atualizar (só gerente): links do app no Netlify e no Claude, do GitHub, do Netlify e do Supabase, com botão de copiar","Aba Atualizar: arquivos prontos para o GitHub (index.html, camada-gpe.js e netlify.toml já ligados ao Supabase); o .zip traz os arquivos soltos","Tela de entrada no Netlify mostra o motivo quando não conecta ao banco (camada-gpe.js ausente, chave recusada, banco vazio ou sem internet)","camada-gpe.js novo (Supabase): suba junto com o index.html"]},
   {v:"2026.10.23", d:"23/10/2026", itens:["Relatório: gráficos da evolução semanal, mensal e anual (poda em colunas 3D e extirpação em linha, e locais atendidos por tipo em linhas)","Relatório: tabelas de evolução semanal, mensal e anual no modelo da planilha (semana, período, poda total, extirpação total, processo/O.S, entre-pista, praça…), com o histórico da planilha até a 32ª semana","Baixar em PDF os gráficos da manutenção, com os filtros escolhidos e o logo da COMURG","Gráficos da manutenção: incidência de defeito por equipamento (quantas vezes estragou), tempo em manutenção (total, média e maior parada), disponibilidade no período, intervalo médio entre defeitos e defeito mais comum","Gráficos (aba dentro do Checklist) só da comunicação de defeito / manutenção, em 3D com linhas de grade: comunicações e retornos por dia com a linha de equipamentos em manutenção, tipo de defeito, urgência, parado × operante, por equipamento, por turma e dias fora de operação","Comunicação de defeito: parte 7 \"Retorno à atividade\" para preencher quando o equipamento voltar (data, horário, KM, oficina, serviço executado, liberado para operar, devolução do reserva e assinatura do supervisor); a comunicação em aberto mostra o botão para registrar o retorno","Fotos e vídeo só pela câmera, tirados na hora: o app recusa arquivo antigo da galeria","Comunicação de defeito: 6 fotos obrigatórias (2 do defeito em ângulos diferentes, parte de cima da carroceria, dentro do cesto e as duas laterais do equipamento inteiro); as fotos saem no PDF","Checklist: fotos obrigatórias da parte de cima da carroceria e de dentro do cesto (limpos) e das duas laterais do caminhão, e vídeo curto 360° do cesto; as fotos saem no PDF"]},
   {v:"2026.10.22", d:"22/10/2026", itens:["Serviço a executar também obrigatório em O.S e processo","Serviço \"Poda de rebaixamento de copa\" passou a se chamar \"Poda de redução de copa\"","Serviço \"Poda de levantamento de copa\" trocado por \"Poda de levantamento de saia\"","Serviços \"Árvore caída\" e \"Galho caído\" na lista de serviços a executar","Programar: em entre-pista, praça e área pública é obrigatório especificar o serviço (poda de manutenção, poda/extirpação, limpeza, levantamento de saia, adequação à rede, redução de copa, emergência, extirpação ou outro); aparece nas listas, no relatório e na planilha","Programar: O.S e processo não bloqueiam entre-pista, praça, área pública e calçada no mesmo endereço (e essas não bloqueiam O.S e processo); a duplicidade vale só entre O.S/processo ou entre os demais tipos","Checklist por equipamento: PODA I faz 2 por período e PODA II faz 4 (3 equipamentos + a van); a aba mostra quantos cada turma já fez no dia e o formulário sugere o equipamento que falta","Checklist e comunicação de defeito: assinatura sempre do supervisor da turma (entrega, recebimento, comunicação e retorno); gerência e coordenação podem preencher e o supervisor assina no aparelho com a matrícula e a senha de assinatura dele; diretoria só consulta","Baixar em PDF o checklist e a comunicação de defeito já preenchidos, no layout do formulário COMURG, com as assinaturas eletrônicas","Recebimento do turno: quem recebe vê o checklist na própria aba (aviso com número na aba Checklist), confere e assina dando ciência das condições do equipamento","Botão de olho em todos os campos de senha (entrar, acessos, assinatura) para ver o que está sendo digitado","Comunicação de defeito e recolhimento para manutenção do cesto aéreo (formulário COMURG completo), assinada pelo supervisor, com registro do retorno do equipamento e lista de manutenções em aberto; pode ser aberta direto do checklist com os dados já preenchidos","Checklist: assinatura eletrônica no modelo de documento assinado (selo, nome, cargo, data e hora e código verificador), com senha própria de assinatura, diferente da senha de entrar; o gerente pode apagar uma senha de assinatura esquecida","Checklist: item dos cones pergunta se o equipamento está com os cones oferecidos pela empresa MAAS","Aba Checklist: checklist diário de inspeção pós-operacional do cesto aéreo (formulário COMURG completo: situação do equipamento, conferência final, ocorrências e declaração), com aviso de equipamento não apto e das equipes que trabalharam no dia sem checklist","Checklist assinado pelo supervisor que entrega e pelo supervisor que recebe o turno (operador identificado por nome e matrícula); depois de recebido, o checklist fica fechado","Tipo de local Processo de volta (junto com O.S), com nº obrigatório; o endereço fica bloqueado até o processo ser concluído"]},
   {v:"2026.10.21", d:"21/10/2026", itens:["Endereço em campos separados: tipo de via (R., AV., AL.…), nome, QD., LT., complemento e setor; o app monta o logradouro no padrão","Endereço padronizado: R. (rua), AV. (avenida), AL. (alameda), QD. (quadra), LT. (lote); o app corrige ao sair do campo e não salva fora do padrão","Duplicidade: O.S em aberto bloqueia até ser concluída; área pública, canteiro central e praça executados ficam bloqueados para outra supervisão por 180 dias","Aviso de duplicidade mostra a supervisão, o supervisor, a equipe, a data e quem lançou a programação, já enquanto o endereço é digitado","Bloqueio de duplicidade reforçado: endereço com programação aberta ou já atendido nos últimos 60 dias (por qualquer equipe) não pode ser programado de novo (compara a rua mesmo com quadra/lote diferentes)","Escala 12x36 retirada do app e do relatório (meta diária vale de segunda a sábado)","Contrato semanal = contrato mensal ÷ 4, comparado com a programação e a execução da semana (Painel e relatório)","Painel sem o quadro de movimentação recente","Meta de programação diária: R$ 50 mil por supervisão","Somas corrigidas: no período, o programado conta pela data programada e o executado pela data em que foi feito (inclui serviços adiantados)","Relatório: itens do contrato com quantidade e valor (R$) em cada barra","PDF do relatório sem cortes: página inteira na largura (corrigido corte do lado esquerdo), blocos não se dividem entre páginas e tabelas longas repetem o cabeçalho","Semanas mostram o período: de segunda a domingo (ex.: Semana 33ª · de 19/10 a 25/10/2026)","Baixas e Quedas: ver todas as turmas juntas, por grupo (PODA I / PODA II) ou uma turma separada","Localização pelo GPS do aparelho na baixa, no serviço sem programação e nas quedas (com opção de colar coordenadas)","Nomes dos supervisores corrigidos conforme o cadastro de Acessos","Supervisor vê só os registros de galho e árvore caída da própria turma","Gerente pode excluir programação pela Lista e pelo Painel (com confirmação)","Aba Atualizar (só gerente): baixar tudo num único .zip, arquivos avulsos e o que mudou","Painel: evolução semanal, mensal e anual e resumo mês a mês","Painel: acompanhamento da programação (turma × dia) e movimentação recente","Filtro por dia específico no Painel, relatório e planilha","Nome do desenvolvedor só na tela de login","Viatura VAN 4051.5"]},
   {v:"2026.10.20", d:"20/10/2026", itens:["Quedas: atendimento imediato e registro do impacto na programação do dia","Tipo de local: Processo passou a ser O.S","Supervisor acessa só Programar, Baixas e Quedas","Painel (dashboard) no lugar do Resumo","Relatório: parciais e não executados em tabelas separadas, valores do contrato em R$","Viaturas SKY 5074.0 e SPLINTER 5071.0 (reserva)","Botões para abrir endereços no Google Maps"]},
   {v:"2026.10.19", d:"19/10/2026", itens:["Aba Quedas separada","Lista só para visualização","Relatório: impacto do não executado × feito no lugar","Gráfico de árvores por dia com podas, extirpações e total"]}
 ];
+// links úteis (aba Atualizar, só o gerente)
+const LINKS_APP=[
+  {t:"App no Netlify (para as equipes)", s:"Endereço público do app, com o banco no Supabase.", u:"https://programacao-gpe.netlify.app"},
+  {t:"App no Claude", s:"Versão dentro do Claude (banco do Claude).", u:"https://claude.ai/artifact/GmyiVqG1JySNfn77yrriiN"},
+  {t:"GitHub – repositório do app", s:"Onde se sobe o index.html a cada atualização.", u:"https://github.com/gerenciadepodaeextirpacao-collab/PROGRAMACAO-GPE"},
+  {t:"Netlify – painel", s:"Publicações (Deploys) e configurações do site.", u:"https://app.netlify.com"},
+  {t:"Supabase – banco de dados", s:"Tabela documentos, fotos (Storage) e SQL Editor.", u:"https://supabase.com/dashboard/project/eyqbihvatzcjismsszvs"}
+];
 const DEPLOY=[
-  {arq:"index.html", nome:"index.html", tipo:"text/html", t:"App completo (index.html)", s:"Para o GitHub e o Netlify: substitua o index.html do repositório."},
-  {arq:"README.md", nome:"README.md", tipo:"text/markdown", t:"README.md", s:"Descrição do projeto para o GitHub."},
-  {arq:"INSTRUCOES_AI_STUDIO.md", nome:"INSTRUCOES_AI_STUDIO.md", tipo:"text/markdown", t:"Instruções para o AI Studio", s:"Texto pronto para adaptar o app ao Firebase."},
-  {arq:"PROMPT_GITHUB_NETLIFY.md", nome:"PROMPT_GITHUB_NETLIFY.md", tipo:"text/markdown", t:"Prompt GitHub + Netlify", s:"Texto pronto para adaptar o app: dados num repositório privado do GitHub, gravados por uma função do Netlify."}
+  {arq:"index.html", nome:"index.html", tipo:"text/html", t:"index.html (o app)", s:"Muda a cada atualização. É o arquivo que você sobe toda vez."},
+  {arq:"camada-gpe.js", nome:"camada-gpe.js", tipo:"text/javascript", t:"camada-gpe.js (ligação com o Supabase)", s:"Só precisa subir de novo quando o histórico avisar."},
+  {arq:"netlify.toml", nome:"netlify.toml", tipo:"text/plain", t:"netlify.toml (configuração do Netlify)", s:"Só precisa subir de novo quando o histórico avisar."},
+  {arq:"README.md", nome:"README.md", tipo:"text/markdown", t:"README.md", s:"Descrição do projeto no GitHub."}
 ];
 async function baixarDeploy(i){
   const d=DEPLOY[i]; if(!downloads){ toast("Download indisponível nesta visualização."); return; }
@@ -1242,8 +1293,8 @@ async function baixarTudo(btn){
   const t0=btn?.innerHTML; if(btn){ btn.disabled=true; btn.innerHTML="<span>Preparando o pacote…</span>"; }
   try{
     const files=[];
-    for(const d of DEPLOY){ const r=await fetch("deploy/"+d.arq,{cache:"no-store"}); if(!r.ok) throw new Error(d.arq); files.push({name:"programacao-gpe/"+d.nome, data:await r.text()}); }
-    files.push({name:"programacao-gpe/CHANGELOG.md", data:changelogMd()});
+    for(const d of DEPLOY){ const r=await fetch("deploy/"+d.arq,{cache:"no-store"}); if(!r.ok) throw new Error(d.arq); files.push({name:d.nome, data:await r.text()}); }
+    files.push({name:"CHANGELOG.md", data:changelogMd()});
     const blob=XL.zip(files,"application/zip");
     await downloads.save({filename:"programacao-gpe-"+APP_VERSAO+".zip", data:blob});
     toast("Pacote completo pronto. Veja os downloads do aparelho.");
@@ -1255,28 +1306,34 @@ function renderUpd(){
   if(!isGerente()){ host.innerHTML=`<div class="empty">Só o gerente acessa esta aba.</div>`; return; }
   host.innerHTML=`<section class="card" style="display:grid;gap:12px">
     <div class="step">Versão em uso <b>${APP_VERSAO}</b></div>
-    <div class="vdl"><button type="button" class="btn pri" data-dlall><span>Baixar tudo (.zip)<small>index.html, README.md, instruções do AI Studio e histórico de mudanças num só arquivo.</small></span></button></div>
+  </section>
+  <section class="card" style="display:grid;gap:10px">
+    <div class="step">Links do app <b>só o gerente vê</b></div>
+    ${LINKS_APP.map((l,i)=>`<div class="lkrow"><div><b>${esc(l.t)}</b><small>${esc(l.s)}</small><a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.u)}</a></div><button type="button" class="btn sec" data-cplink="${i}">Copiar</button></div>`).join("")}
+  </section>
+  <section class="card" style="display:grid;gap:12px">
+    <p class="note" style="margin:0">Arquivos <b>prontos para o GitHub</b> (repositório <b>PROGRAMACAO-GPE</b>), já ligados ao banco do <b>Supabase</b>. O Netlify publica sozinho depois do envio.</p>
+    <div class="vdl"><button type="button" class="btn pri" data-dl="0"><span>⬇ Baixar index.html<small>É só isto na maioria das atualizações.</small></span></button>
+      <button type="button" class="btn sec" data-dlall><span>Baixar tudo (.zip)<small>index.html, camada-gpe.js, netlify.toml, README.md e o histórico, soltos no .zip.</small></span></button></div>
     <details><summary style="cursor:pointer;font-weight:600;color:var(--muted);font-size:14px">Baixar um arquivo por vez</summary>
       <div class="vdl" style="margin-top:8px">${DEPLOY.map((d,i)=>`<button type="button" class="btn sec" data-dl="${i}"><span>${d.t}<small>${d.s}</small></span></button>`).join("")}</div></details>
-    <p class="note" style="margin:0">No GitHub, envie os arquivos <b>de dentro</b> da pasta do .zip (descompacte antes). O Netlify só lê o <b>index.html</b> solto, não o .zip.</p>
   </section>
   <section class="card" style="display:grid;gap:8px">
     <div class="step">Como subir no <b>GitHub</b></div>
     <ol style="margin:0;padding-left:20px;display:grid;gap:6px;font-size:14px">
-      <li>Toque em <b>Baixar tudo (.zip)</b> e descompacte (no Windows: botão direito → <b>Extrair tudo</b>). Ou baixe só o <b>index.html</b> em “Baixar um arquivo por vez”.</li>
-      <li>Abra <b>github.com/gerenciadepodaeextirpacao-collab/PROGRAMACAO-GPE/upload/main</b> com a conta da gerência.</li>
-      <li>Arraste o <b>index.html</b> (e, se quiser, os outros arquivos da pasta) para a área pontilhada.</li>
-      <li>Desça e toque no botão verde <b>Commit changes</b> (traduzido: <b>Confirmar alterações</b>).</li>
-      <li>O Netlify publica a nova versão sozinho em cerca de 1 minuto.</li>
+      <li>Toque em <b>Baixar index.html</b>.</li>
+      <li>Abra <b>github.com/gerenciadepodaeextirpacao-collab/PROGRAMACAO-GPE</b> → <b>Add file</b> (Adicionar arquivo) → <b>Upload files</b> (Carregar arquivos).</li>
+      <li>Arraste o <b>index.html</b> (ele substitui o antigo) e toque no botão verde <b>Commit changes</b> (Confirmar alterações).</li>
+      <li>Em cerca de 1 minuto o Netlify publica sozinho. Confira em <b>Deploys</b>: status <b>Published</b>. No celular, feche e abra o app.</li>
     </ol>
-    <p class="note" style="margin:0">Fora do Claude, o app só entra e grava depois de ligado a um banco próprio (Firebase). Use as <b>Instruções para o AI Studio</b> para essa adaptação.</p>
+    <p class="note" style="margin:0">Quando o histórico abaixo disser que mudou o <b>camada-gpe.js</b> ou o <b>netlify.toml</b>, baixe o .zip, descompacte e suba esses arquivos também. Os dados ficam no Supabase e não são afetados pela atualização.</p>
   </section>
   <section class="card" style="display:grid;gap:8px">
     <div class="step">O que <b>mudou</b></div>
     <div class="vlist" style="max-height:none">${VERSOES.map(v=>`<div class="vitem"><b>${v.v}</b><span>${v.d}</span><ul>${v.itens.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`).join("")}</div>
   </section>`;
 }
-$("#updBox").addEventListener("click",e=>{ const a=e.target.closest("[data-dlall]"); if(a){ baixarTudo(a); return; } const b=e.target.closest("[data-dl]"); if(b) baixarDeploy(+b.dataset.dl); });
+$("#updBox").addEventListener("click",e=>{ const cp=e.target.closest("[data-cplink]"); if(cp){ const u=LINKS_APP[+cp.dataset.cplink].u; (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast("Link copiado.")).catch(()=>{ prompt("Copie o link:",u); }); return; } const a=e.target.closest("[data-dlall]"); if(a){ baixarTudo(a); return; } const b=e.target.closest("[data-dl]"); if(b) baixarDeploy(+b.dataset.dl); });
 
 
 
@@ -1873,8 +1930,8 @@ async function criarSenhaAss(uid,nova,conf,login){
   const u=acesso?.[uid]; if(!u) return "usuário não encontrado";
   if(!nova||nova.length<6) return "a senha de assinatura precisa ter pelo menos 6 caracteres";
   if(nova!==conf) return "as duas senhas de assinatura não são iguais";
-  if(!login||await hashPin(u.salt,login)!==u.hash) return "a senha de entrar no app não confere";
-  if(await hashPin(u.salt,nova)===u.hash) return "a senha de assinatura precisa ser diferente da senha de entrar";
+  if(!login||!(await senhaConfere(uid,login))) return "a senha de entrar no app não confere";
+  if(await senhaConfere(uid,nova)) return "a senha de assinatura precisa ser diferente da senha de entrar";
   if(assins[uid]?.hash) return "já existe senha de assinatura";
   const salt=Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>b.toString(16).padStart(2,"0")).join("");
   const doc={salt,hash:await hashPin(salt,nova),nome:u.nome,em:new Date().toISOString()};
@@ -1911,7 +1968,7 @@ function abrirSenhaAss(){
     const a=assins[uid], n=$("#saN").value;
     if(await hashPin(a.salt,$("#saAt").value)!==a.hash) return erro("A senha de assinatura atual não confere.");
     if(!n||n.length<6) return erro("A nova senha precisa ter pelo menos 6 caracteres."); if(n!==$("#saC").value) return erro("As duas senhas novas não são iguais.");
-    const u=acesso?.[uid]; if(u&&await hashPin(u.salt,n)===u.hash) return erro("A senha de assinatura precisa ser diferente da senha de entrar.");
+    if(await senhaConfere(uid,n)) return erro("A senha de assinatura precisa ser diferente da senha de entrar.");
     const salt=Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>b.toString(16).padStart(2,"0")).join("");
     const doc={salt,hash:await hashPin(salt,n),nome:sessao.nome,em:new Date().toISOString()};
     try{ await db.collection(ASS_COL).doc(uid).set(doc); assins[uid]=doc; close(); toast("Senha de assinatura trocada."); }catch(e){ erro("Não foi possível salvar agora."); }
@@ -1926,11 +1983,43 @@ $("#kSup").innerHTML=optTurmas();
 $("#kSup").value=meuSup()||""; $("#kData").value=hoje();
 $("#kSup").onchange=()=>{renderChk();renderChkGraf()}; $("#kData").onchange=()=>{renderChk();renderChkGraf()};
 $("#kNovo").onclick=()=>abrirChk(null);
+// lote de checklists para o PDF (turma/poda do filtro de cima + período)
+function chkLote(){
+  const sup=$("#kSup").value, dia=$("#kData").value||hoje(), per=$("#kBxPer").value, d=parseD(dia);
+  let ini=dia, fim=dia, nome="dia "+fmtD(dia);
+  if(per==="sem"){ const seg=new Date(d); seg.setDate(d.getDate()-((d.getDay()+6)%7)); const dom=new Date(seg); dom.setDate(seg.getDate()+6); ini=iso(seg); fim=iso(dom); nome="semana "+(semanaDe(dia)||"")+"ª ("+fmtDs(ini)+" a "+fmtDs(fim)+")"; }
+  if(per==="mes"){ ini=dia.slice(0,8)+"01"; const u=new Date(d.getFullYear(),d.getMonth()+1,0); fim=iso(u); nome=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"][d.getMonth()]+"/"+d.getFullYear(); }
+  if(per==="tudo"){ ini="0000"; fim="9999"; nome="todos"; }
+  const man=$("#kBxTipo").value==="man";
+  const lst=(man?manVis():chkVis()).filter(c=>c.data>=ini&&c.data<=fim&&casaTurma(sup,c)).sort((a,b)=>(a.data||"").localeCompare(b.data||"")||(a.supervisao||"").localeCompare(b.supervisao||"")||(a.viatura||"").localeCompare(b.viatura||""));
+  const quem=!sup?"todas as turmas":sup.startsWith("G:")?sup.slice(2):sup;
+  return {lst,nome,quem,man};
+}
+function chkLoteInfo(){ const el=$("#kBxInfo"); if(!el) return; const {lst,nome,quem}=chkLote(); const man=$("#kBxTipo").value==="man"; el.innerHTML=`<b>${lst.length}</b> ${man?(lst.length===1?"comunicação":"comunicações"):(lst.length===1?"checklist":"checklists")} · ${esc(quem)} · ${esc(nome)}`; $("#kBxBtn").disabled=!lst.length; }
+$("#kBxPer").onchange=chkLoteInfo; $("#kBxTipo").onchange=chkLoteInfo; document.querySelector(".kbx").addEventListener("toggle",chkLoteInfo);
+$("#kBxBtn").onclick=async()=>{
+  if(!downloads){ toast("Download não disponível aqui."); return; }
+  const {lst,nome,quem,man}=chkLote(); if(!lst.length) return;
+  const rot=man?"Comunicações de defeito":"Checklists";
+  if(lst.length>60){ toast("São "+lst.length+" documentos. Escolha um período menor (no máximo 60 por PDF)."); return; }
+  const btn=$("#kBxBtn"), t=btn.textContent; btn.disabled=true; btn.textContent="Preparando…";
+  try{
+    try{ await seloPng(); }catch(x){}
+    await Promise.all(lst.flatMap(c=>(man?MAN_SLOTS:MID_SLOTS).map(s=>midCarregar(c.midia?.[s.k]))));
+    const htmls=lst.map(c=>(man?manDocHtml(c):chkDocHtml(c)).replace(/<div class="i"><svg[\s\S]*?<\/svg><\/div>/g,SELO_PNG?`<div class="i"><img src="${SELO_PNG}" alt=""></div>`:"$&"));
+    btn.textContent="Gerando PDF (1 de "+lst.length+")…";
+    const blob=await rptPdfMulti(htmls,rot+" · "+quem+" · "+nome,{escala:2,qualidade:.92,prog:(i,n)=>{btn.textContent="Gerando PDF ("+i+" de "+n+")…";}});
+    const arq=((man?"comunicacoes-defeito-":"checklists-")+quem+"-"+nome).normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^A-Za-z0-9]+/g,"-").replace(/-+$/,"").toLowerCase()+".pdf";
+    await downloads.save({filename:arq,data:blob});
+  }catch(e){ if(e?.message==="load") toast("Sem internet para montar o PDF. Tente de novo com conexão."); else if(e?.code!=="cancelled"&&e?.code!=="declined") toast("Não foi possível gerar o PDF."); console.error(e); }
+  finally{ btn.disabled=false; btn.textContent=t; chkLoteInfo(); }
+};
 $("#kSenha").onclick=abrirSenhaAss;
 
 function renderChk(){
   const host=$("#kList"); if(!host) return;
   const sup=$("#kSup").value, dia=$("#kData").value||hoje();
+  try{chkLoteInfo()}catch(e){}
   const podeLanc=!!sessao&&sessao.perfil!=="diretoria"; $("#kNovo").hidden=!podeLanc; $("#kSenha").hidden=!(ehSup()||isGerente()); $("#kManut").hidden=!podeLanc;
   $("#kSoSup").hidden=ehSup()||!sessao;
   const vis=chkVis();
@@ -2326,6 +2415,7 @@ const FDOC_CSS=`.fdoc{box-sizing:border-box;width:794px;background:#fff;color:#1
 .fdoc .fcel{border:1px solid #9a9a9a;padding:4px;display:grid;gap:3px}
 .fdoc .fcel img{width:100%;height:220px;object-fit:cover;display:block}
 .fdoc .fcel span{font-size:10px;color:#333}
+.fdoc .fgrid.m .fcel img,.fdoc .fgrid.m .fsem{height:150px}
 .fdoc .fsem{height:220px;display:grid;place-items:center;color:#999;font-size:11px;background:#f4f4f4}
 .fdoc .rod{font-size:9.5px;color:#666;text-align:center;margin-top:6px}`;
 const fx=(v,alvo)=>v===alvo?"( X )":"(&nbsp;&nbsp;&nbsp;&nbsp;)";
@@ -2372,7 +2462,7 @@ function manDocHtml(m){
       <tr><td class="k">Houve equipamento reserva</td><td>${fx(m.reserva,"SIM")} SIM &nbsp;&nbsp;${fx(m.reserva,"NÃO")} NÃO</td></tr>
       <tr><td class="k">Qual equipamento reserva</td><td>${esc(m.reservaQual||"—")}</td></tr></table></div>
     <div><p class="sec">7. Retorno à atividade</p>${ret.volta==="SIM"?`<table>${kv("Data do retorno",fmtD(ret.data),"Horário",esc(ret.hora||"—"))}${kv("KM no retorno",esc(ret.km||"—"),"Oficina / responsável",esc(ret.oficina||"—"))}${kv("Liberado para operar",esc(ret.liberado||"SIM"),"Reserva devolvido",m.reserva==="SIM"?esc(ret.reservaDevolvida||"—"):"N/A")}</table><div class="box" style="margin-top:6px"><b>Serviço executado:</b> ${esc(ret.servico||ret.obs||"—")}${ret.obs&&ret.servico?`<br><b>Observação:</b> ${esc(ret.obs)}`:""}</div>`:`<div class="pend">Equipamento ainda em manutenção – retorno não registrado.</div>`}</div>
-    <div><p class="sec">Registro fotográfico</p><div class="fgrid">${MAN_SLOTS.map(x=>{const u=midUrl(m.midia?.[x.k]);return `<div class="fcel">${u?`<img src="${esc(u)}" alt="">`:`<div class="fsem">Sem foto</div>`}<span>${esc(x.t)}</span></div>`}).join("")}</div></div>
+    <div><p class="sec">Registro fotográfico</p><div class="fgrid m">${MAN_SLOTS.map(x=>{const u=midUrl(m.midia?.[x.k]);return `<div class="fcel">${u?`<img src="${esc(u)}" alt="">`:`<div class="fsem">Sem foto</div>`}<span>${esc(x.t)}</span></div>`}).join("")}</div></div>
     <div><p class="sec">6. Assinaturas</p><div class="sl">Operador</div><table>${kv("Nome",esc(m.operador?.nome||""),"Matrícula",esc(m.operador?.mat||""))}</table><p class="leg" style="margin:3px 0 0">Operador identificado pelo supervisor na comunicação.</p></div>
     ${fsig("Supervisor",m.assin)}
     <div><table>${kv("Data",fmtD(m.data),"Horário",esc(m.hora||""))}</table></div>
@@ -2399,7 +2489,13 @@ const MID_SLOTS=[
   {k:"ladoEsq",t:"Lateral inteira do caminhão – lado esquerdo",tipo:"foto"},
   {k:"video360",t:"Vídeo curto 360° do cesto (até uns 20 segundos)",tipo:"video"}];
 const MID_COL="chkmidia"; let assets=null; const midCache={};
-const midUrl=m=>!m?"":m.id?"/_blob/"+m.id:(midCache[m.db]||"");
+// fora do Claude as fotos ficam no Supabase (bucket "midia"); vale mesmo com um camada-gpe.js antigo
+const SUPA_MIDIA="https://eyqbihvatzcjismsszvs.supabase.co/storage/v1/object/public/midia/";
+// update (mescla) mesmo quando a camada do Netlify não tiver update()
+async function dbUpdate(ref,parte){ if(typeof ref.update==="function") return ref.update(parte);
+  const atual=(await ref.get()).data()||{}; const mesclar=(a,b)=>{ const o={...a}; for(const [k,v] of Object.entries(b)) o[k]=(v&&typeof v==="object"&&!Array.isArray(v)&&a&&a[k]&&typeof a[k]==="object"&&!Array.isArray(a[k]))?mesclar(a[k],v):v; return o; };
+  return ref.set(mesclar(atual,parte)); }
+const midUrl=m=>!m?"":m.id?(window.GPE_BLOB_URL?window.GPE_BLOB_URL(m.id):window.GPE_NETLIFY?SUPA_MIDIA+m.id:"/_blob/"+m.id):(midCache[m.db]||"");
 async function midCarregar(m){ if(!m?.db||midCache[m.db]||!db) return; try{ const s=await db.collection(MID_COL).doc(m.db).get(); if(s.exists) midCache[m.db]=s.data().img||""; }catch(e){} }
 function imgReduzir(file,lado,q){ return new Promise((res,rej)=>{ const u=URL.createObjectURL(file), im=new Image();
   im.onload=()=>{ const k=Math.min(1,lado/Math.max(im.naturalWidth,im.naturalHeight)); const cv=document.createElement("canvas"); cv.width=Math.round(im.naturalWidth*k); cv.height=Math.round(im.naturalHeight*k);
@@ -2440,7 +2536,7 @@ async function midEnviar(slot,file,onProg){
 const midErro=e=>e?.msg||({too_large:"Arquivo grande demais. Grave um vídeo mais curto.",unsupported_type:"Tipo de arquivo não aceito. Use foto JPG/PNG ou vídeo MP4.",quota_or_state:"O espaço de arquivos do app está cheio. Avise o gerente.",rate_limited:"Muitos envios seguidos. Espere um pouco e tente de novo."}[e?.code])||"Não foi possível enviar o arquivo. Tente de novo.";
 function midSlotHtml(s,m,edit){
   const url=midUrl(m), tem=!!m;
-  const prev=tem?(s.tipo==="video"?(m.id?`<video src="${esc(url)}" controls playsinline preload="metadata"></video>`:""):(url?`<a href="${esc(url)}" target="_blank" rel="noopener"><img src="${esc(url)}" alt=""></a>`:`<div class="midph">carregando…</div>`)):`<div class="midph">${s.tipo==="video"?"🎥":"📷"}</div>`;
+  const prev=tem?(s.tipo==="video"?(m.id?`<video src="${esc(url)}" controls playsinline preload="metadata"></video>`:""):(url?`<a href="${esc(url)}" target="_blank" rel="noopener"><img src="${esc(url)}" alt="" onerror="this.closest('.midprev').innerHTML='<div class=&quot;midph&quot; style=&quot;font-size:11px;padding:4px;text-align:center&quot;>foto indisponível neste acesso</div>'"></a>`:`<div class="midph">carregando…</div>`)):`<div class="midph">${s.tipo==="video"?"🎥":"📷"}</div>`;
   return `<div class="midslot${tem?" ok":""}" data-k="${s.k}"><div class="midprev">${prev}</div><div class="midtx"><b>${esc(s.t)}</b><span class="midst">${tem?"✔ anexado":s.tipo==="video"&&!assets&&edit?"vídeo indisponível neste acesso":"falta anexar"}</span>
     ${edit?`<div class="midbtns"><label class="btn sec midbtn">${s.tipo==="video"?"🎥 Gravar":"📷 Câmera"}<input type="file" accept="${s.tipo==="video"?"video/*":"image/*"}" capture="environment" hidden></label></div>`:""}</div></div>`;
 }
@@ -3355,11 +3451,26 @@ async function rptPdf(html, label, op={}){
   const scs=[...document.querySelectorAll(".rscroll")].map(el=>[el,el.scrollTop]); scs.forEach(([el])=>el.scrollTop=0);
   try{
     const H=paginarRpt(host.firstElementChild), sc=Math.max(1,Math.min(op.escala||2,30000/Math.max(1,H))); // canvas muito alto falha: reduz a escala em relatórios longos
-    const w=html2pdf().set({margin:[8,0,12,0],image:{type:"jpeg",quality:op.qualidade||.95},html2canvas:{scale:sc,backgroundColor:op.fundo||"#fcfcfb",logging:false,scrollX:0,scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css"]}}).from(host.firstElementChild).toPdf();
+    const w=html2pdf().set({margin:[8,0,12,0],image:{type:"jpeg",quality:op.qualidade||.95},html2canvas:{scale:sc,backgroundColor:op.fundo||"#fcfcfb",logging:false,scrollX:0,scrollY:0,useCORS:true},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css"]}}).from(host.firstElementChild).toPdf();
     const pdf=await w.get("pdf"); const n=pdf.internal.getNumberOfPages();
     for(let i=1;i<=n;i++){pdf.setPage(i);pdf.setFontSize(8);pdf.setTextColor(110);pdf.text(`Programação GPE · ${label} · página ${i} de ${n}`,105,291,{align:"center"})}
     return pdf.output("blob");
   } finally { host.remove(); window.scrollTo(sx,sy); scs.forEach(([el,t])=>el.scrollTop=t); }
+}
+// vários documentos num PDF só: cada um começa numa página nova
+async function rptPdfMulti(htmls, label, op={}){
+  await loadH2P(); try{await document.fonts.ready}catch(e){}
+  const sx=window.scrollX||0, sy=window.scrollY||0; window.scrollTo(0,0);
+  const hosts=htmls.map(h=>{ const d=document.createElement("div"); d.style.cssText="position:absolute;left:-12000px;top:0;width:794px;background:"+(op.fundo||"#fff"); d.innerHTML=h; document.body.appendChild(d); return d; });
+  try{
+    const opt=(H)=>({margin:[8,0,12,0],image:{type:"jpeg",quality:op.qualidade||.92},html2canvas:{scale:Math.max(1,Math.min(op.escala||2,30000/Math.max(1,H))),backgroundColor:op.fundo||"#fff",logging:false,scrollX:0,scrollY:0,useCORS:true},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css"]}});
+    const Hs=hosts.map(h=>paginarRpt(h.firstElementChild));
+    let w=html2pdf().set(opt(Math.max(...Hs))).from(hosts[0].firstElementChild).toPdf();
+    for(let i=1;i<hosts.length;i++){ const el=hosts[i].firstElementChild; w=w.get("pdf").then(pdf=>{pdf.addPage();}).from(el).toContainer().toCanvas().toPdf(); if(op.prog) w=w.then(()=>op.prog(i+1,hosts.length)); }
+    const pdf=await w.get("pdf"); const n=pdf.internal.getNumberOfPages();
+    for(let i=1;i<=n;i++){pdf.setPage(i);pdf.setFontSize(8);pdf.setTextColor(110);pdf.text(`Programação GPE · ${label} · página ${i} de ${n}`,105,291,{align:"center"})}
+    return pdf.output("blob");
+  } finally { hosts.forEach(h=>h.remove()); window.scrollTo(sx,sy); }
 }
 function rptHtmlDoc(html){
   const css=[...document.querySelectorAll("style")].map(s=>s.textContent).join("\n").split("/* ---------- relatório")[1]||"";
